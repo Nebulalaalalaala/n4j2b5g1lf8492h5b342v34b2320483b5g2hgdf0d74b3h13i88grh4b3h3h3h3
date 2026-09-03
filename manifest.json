@@ -1,54 +1,54 @@
 {
   "schema": 1,
-  "version": "1.2.0",
+  "version": "1.2.10",
   "game_compatibility": "goober-dash-2026-08-04-godot-3.5.1",
-  "changelog": "Phase 0 foundation release: consistent movable/resizable windows, repaired Timeline level presentation and freecam reset, bounded cosmetic catalog loading, stricter replay self-tests, moving-world determinism diagnostics, and the opt-in verified updater.",
+  "changelog": "Fixed levels rendering as hollow shapes with a colored outline and no terrain fill when a block/ramp is too thin for the theme to round its corners. Fixed physics blocks, ice blocks, jump zones, sawblades, and every other level object type going invisible while using the Timeline Editor -- these are now reliably shown during Timeline Editor preview without affecting how they behave in normal gameplay. Also includes the previously-published window resizing, freecam presentation, cosmetic catalog, replay self-test, determinism diagnostics, verified updater/rollback, and window-geometry-resize-deadlock fixes from 1.2.0.",
   "files": [
     {
       "path": "TASTool.gd",
-      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.0/TASTool.gd",
-      "size": 589723,
-      "sha256": "a530cf9a7edf4a964abbb8b2e2fee501fd502a0d244e0e28acdc84882217d16b"
+      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.10/TASTool.gd",
+      "size": 622753,
+      "sha256": "0a02fd6f205f136df6e0ab5a02d167e1e577b4c715abd68cb5e017c0b314cc82"
     },
     {
       "path": "TASMacroEditor.gd",
-      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.0/TASMacroEditor.gd",
-      "size": 40071,
-      "sha256": "1dd7430e8200ce09fa91a1bc7ad553efa2618e82ed434e93eeddf8c70adb65f8"
+      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.10/TASMacroEditor.gd",
+      "size": 41124,
+      "sha256": "906ef01f82d7b3560b078172585dfceaeb7e8a4b39cc3dd31c99244ac9950dd8"
     },
     {
       "path": "CosmeticSandbox.gd",
-      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.0/CosmeticSandbox.gd",
-      "size": 48590,
-      "sha256": "2e73b2c0fa9b89f3f9ff388908b2e72804db4364533dea58cb0b10668b3b854a"
+      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.10/CosmeticSandbox.gd",
+      "size": 49826,
+      "sha256": "ce81acb177a88b5948ffa70bd05fff4bd4cc747bc2cdf44912b073077804bd2b"
     },
     {
       "path": "GoobWindowGeometry.gd",
-      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.0/GoobWindowGeometry.gd",
-      "size": 1735,
-      "sha256": "280bb191e589e414ed95999a6d39dd4833feeae4b9e151103cd1d26a1cebfc6b"
+      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.10/GoobWindowGeometry.gd",
+      "size": 2469,
+      "sha256": "e53961ff38cf55d991de05bfb8e0fb5b3c5a3726bca5267bc900e70ed484461b"
     },
     {
       "path": "TASWorldOverlay.gd",
-      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.0/TASWorldOverlay.gd",
+      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.10/TASWorldOverlay.gd",
       "size": 7550,
       "sha256": "2158f4d22884a9313818a101bdd9080916d9bbc0118971a1ab6d7e3c413b63b0"
     },
     {
       "path": "TASInputDisplay.gd",
-      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.0/TASInputDisplay.gd",
+      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.10/TASInputDisplay.gd",
       "size": 4524,
       "sha256": "b18e5a27aec8b760bc4aa60a4a1146b0dfac03c31f12dd1cb6662efce42e127a"
     },
     {
       "path": "TASPostPhysicsGuard.gd",
-      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.0/TASPostPhysicsGuard.gd",
+      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.10/TASPostPhysicsGuard.gd",
       "size": 757,
       "sha256": "bb51338d9d87681efe89f85f4b83fad9f2bcef25cda159d37a668e2dd542069a"
     },
     {
       "path": "GoobUpdater.gd",
-      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.0/GoobUpdater.gd",
+      "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/1.2.10/GoobUpdater.gd",
       "size": 12788,
       "sha256": "1e449aac27dbd9628b59b621bede3ec4ed0e271d7f5443ec1142d34a869fecb2"
     }
