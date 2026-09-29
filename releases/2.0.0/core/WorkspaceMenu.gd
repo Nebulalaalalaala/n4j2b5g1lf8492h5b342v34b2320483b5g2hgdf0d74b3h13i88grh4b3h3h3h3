@@ -231,6 +231,7 @@ func build(owner_tool, root: VBoxContainer, section_tabs: TabContainer, resize_r
 	var developer = page("developer", "Developer tools")
 	developer.add_child(label("Uses the existing Debug tools setting.", 14, MUTED))
 	developer.add_child(button("Debug settings", "settings", 11))
+	developer.add_child(button("Save player data outline", "player-outline", 12))
 	var diagnostics = tas_tool.get("_debug_tools_container")
 	if diagnostics != null:
 		diagnostics.get_parent().remove_child(diagnostics)
@@ -316,6 +317,7 @@ func _build_settings() -> void:
 	system.add_child(button("Reset window layout", "reset-layout", 0))
 	system.add_child(button("Check for updates", "updates", 11))
 	system.add_child(button("Roll back last update", "rollback", 12))
+	system.add_child(button("Replay introduction", "intro", 0))
 	system.add_child(label("Version " + str(tas_tool.call("_get_goobplayability_version")), 14, MUTED))
 
 func _toggle_icon(on: bool) -> Texture:

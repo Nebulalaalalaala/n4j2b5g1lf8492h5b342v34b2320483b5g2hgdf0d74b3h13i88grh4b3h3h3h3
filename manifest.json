@@ -2,7 +2,7 @@
  "schema": 2,
  "version": "2.0.0",
  "game_compatibility": "goober-dash-2026-08-04-godot-3.5.1",
- "changelog": "Goobplayability 2.0: new modular layout (each tool in its own folder, installer presets), Journey Calculate XP, map size captions and knockout map objectives, and an Update ready prompt with Install update in Settings.",
+ "changelog": "Goobplayability 2.0: new modular layout (each tool in its own folder, installer presets), a first-launch introduction, Journey Calculate XP and Win Streak achievement and rewards, map size captions and knockout map objectives, and an Update ready prompt with Install update in Settings.",
  "files": [
   {
    "path": "TASTool.gd",
@@ -15,8 +15,8 @@
    "path": "core/CoreHandler.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/core/CoreHandler.gd",
-   "size": 772,
-   "sha256": "cb556a7d3f54af4fb626f516b04094f0e472740e5408c172194f4df029b50c11"
+   "size": 841,
+   "sha256": "f35d2b6e171d73db78a8147bd0eedfb138decb9d2f042fde5fd745a7b32996d3"
   },
   {
    "path": "core/DataMigration.gd",
@@ -50,29 +50,43 @@
    "path": "core/MainHandler.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/core/MainHandler.gd",
-   "size": 2864,
-   "sha256": "5426206c2d94888417e746537bcfb24b98166ed15127687b4726226d179b033f"
+   "size": 2907,
+   "sha256": "b4113a01febf1e2973ac515536b2212768fe71886b6f1b0f376d4dd7b874f298"
   },
   {
    "path": "core/ModPaths.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/core/ModPaths.gd",
-   "size": 11095,
-   "sha256": "e825a64a5358b9816bf7dd0140594128179c7af889f533252706600ef526328b"
+   "size": 11199,
+   "sha256": "5d336cb4e3c6296819e523e7c8a4c3ae7fb379f4e7f2a1854e4f414c4152db16"
   },
   {
    "path": "core/ModuleGuidePages.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/core/ModuleGuidePages.gd",
-   "size": 3737,
-   "sha256": "aa661bcfe46b4df62f7a91aedac4664f754aa2b4b6be82599a21cc31443f25e4"
+   "size": 3864,
+   "sha256": "9d65d41ce074e44a4042576f2c33317cdde3514580407a64d5dcf8be625b51c2"
   },
   {
    "path": "core/ModulePages.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/core/ModulePages.gd",
-   "size": 7417,
-   "sha256": "fbfe4679593a021b908bce286dae4097432f1ee1dfda106ff0b0a76f19c52d41"
+   "size": 7636,
+   "sha256": "6df740fcd2ecd2e7a86dd26f6b5ea4041bb2e39c439bf22c1cace1ca7e5617dd"
+  },
+  {
+   "path": "core/Onboarding.gd",
+   "module": "core",
+   "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/core/Onboarding.gd",
+   "size": 4973,
+   "sha256": "ebc30cafb197fb4d91ec808a4a5c31d4babf6a91b810ce2c518049c10f1a6e4e"
+  },
+  {
+   "path": "core/Spotlight.gd",
+   "module": "core",
+   "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/core/Spotlight.gd",
+   "size": 7308,
+   "sha256": "8aedc976c8948dfa3b32918c18d0e03e67d9d16d76757ccb01a9de544db8b504"
   },
   {
    "path": "core/TASTool/00_state_1.gd",
@@ -92,15 +106,15 @@
    "path": "core/TASTool/02_placeholders.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/core/TASTool/02_placeholders.gd",
-   "size": 8086,
-   "sha256": "c8e3c6911a7623d0c15a7d7f1962f1f5358a633dd48b6661ce5a790dfc0a3ba7"
+   "size": 8195,
+   "sha256": "f0231186e3eae3518f8782a0df4eadda9d095bbdf40b84fab10e8ee7bba572b5"
   },
   {
    "path": "core/TASTool/03_host_1.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/core/TASTool/03_host_1.gd",
-   "size": 16044,
-   "sha256": "840d6c744fe112b856bd627a1c1d4db431b1ed78d95eeef4438a4ee258cb29c3"
+   "size": 16351,
+   "sha256": "89d56b0cc3c4aa14ec759e8ec6a12d6ef8ac1b95ef9455dd48473b1c8c03c866"
   },
   {
    "path": "core/TASTool/04_host_2.gd",
@@ -134,8 +148,8 @@
    "path": "core/TASTool/08_settings.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/core/TASTool/08_settings.gd",
-   "size": 16864,
-   "sha256": "4837926e0ad04c0c6a8a69f3b2b979abc74046495079a155352ade5e0bd4aa9f"
+   "size": 18092,
+   "sha256": "25a259327e1ce9bf27e7c2b00f89c1cb7f06744e65c7b22d52977d9cbfb837a3"
   },
   {
    "path": "core/TASTool/09_ui_kit.gd",
@@ -176,15 +190,15 @@
    "path": "core/TASTool/14_input_and_menu.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/core/TASTool/14_input_and_menu.gd",
-   "size": 5252,
-   "sha256": "8ddc3599a7bdacfdd921f9d7b0aecd1273748f000658f17aeb239cb21a3931a0"
+   "size": 5380,
+   "sha256": "ecfe5ebd3cccc6a7c5fed41bca4b6df8e6982904c1da04ada5b471b4b7859c05"
   },
   {
    "path": "core/WorkspaceMenu.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/core/WorkspaceMenu.gd",
-   "size": 24346,
-   "sha256": "6d85618040e49182830d37e1ef8ecb2c9d981af04561db20b6098ca7ff47501b"
+   "size": 24486,
+   "sha256": "77d5af2403c415aa9d1f61d07c4b39e8c5a5145cffccc6fd65d52f15b0666fdd"
   },
   {
    "path": "moonlight/moonlight/scripts/Moonlight_LoggedInVisibility.gd",
@@ -477,8 +491,8 @@
    "path": "tools/editor-plus/EditorGuide.gd",
    "module": "editor-plus",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/editor-plus/EditorGuide.gd",
-   "size": 5075,
-   "sha256": "0380f8a61e65cf538a0c63afe2a2ef9f5b484f38361f2f6f1a602391a6b8bb65"
+   "size": 5898,
+   "sha256": "930a5dd861cf2ed4ca05f175fa0410d0c845e7ed728ae410371cb16f91d3b286"
   },
   {
    "path": "tools/editor-plus/EditorGuideDiagram.gd",
@@ -554,8 +568,8 @@
    "path": "tools/editor-plus/EditorPlus/03_scale_thumbnail.gd",
    "module": "editor-plus",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/editor-plus/EditorPlus/03_scale_thumbnail.gd",
-   "size": 15817,
-   "sha256": "e5fcab97f21a20ace4c426da05fa3a555afd91e844a35b5ee1b6ff6c299aace0"
+   "size": 15839,
+   "sha256": "07b15fb414e3555c722cb9662673636d490dfd05efbae6d565f06de9691a2e47"
   },
   {
    "path": "tools/editor-plus/EditorPlusHandler.gd",
@@ -708,8 +722,8 @@
    "path": "tools/journey/JourneyHandler.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/JourneyHandler.gd",
-   "size": 2943,
-   "sha256": "5ba7f8bd720e2350335a44452952cf131883d3a794bae7a06807ab8f8248b6e8"
+   "size": 3028,
+   "sha256": "34f5c69b0715c8de2bced15cf0ea51ac477f4cb1e6ad74e1d51ba82c6983a161"
   },
   {
    "path": "tools/journey/JourneyHud.gd",
@@ -719,11 +733,18 @@
    "sha256": "db40af0f20dfda403c7fd4c89a4b15021a2acf4263650580dbb3da76046b080c"
   },
   {
+   "path": "tools/journey/assets/emblem_streak.png",
+   "module": "journey",
+   "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/assets/emblem_streak.png",
+   "size": 23898,
+   "sha256": "a147e0b0f668fe0d36a31ab7e1117d738ed97882c866ad7f2adafb4d44d80f2f"
+  },
+  {
    "path": "tools/journey/data/JourneyAchievements.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/data/JourneyAchievements.gd",
-   "size": 7038,
-   "sha256": "0faa1004c9ae4b9553505c4403d7eb973b1938e50d7fd21e01055f77514da7cc"
+   "size": 7870,
+   "sha256": "9628dc421278f980324785bddc4f53eed276a2ea89a5867aa8e3591c847ad35a"
   },
   {
    "path": "tools/journey/data/JourneyActivity.gd",
@@ -757,8 +778,8 @@
    "path": "tools/journey/data/JourneyCertified.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/data/JourneyCertified.gd",
-   "size": 3606,
-   "sha256": "23b91383e1c248cc687e947b2250086f968479565656657f967277da4f4fa6d0"
+   "size": 3869,
+   "sha256": "09f8e3a5009be7b3689575974b0ad1de663c56b97723181355b09926c9ff6291"
   },
   {
    "path": "tools/journey/data/JourneyDefinitions.gd",
@@ -778,8 +799,8 @@
    "path": "tools/journey/data/JourneyLedger.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/data/JourneyLedger.gd",
-   "size": 6863,
-   "sha256": "e2e8b48aba71919ff1d60fd7ff4a228071f4a0c38a5722d5a828993cbc184c4c"
+   "size": 8619,
+   "sha256": "20d2bf6d24883616b6d2499298288021cd50e241583337996ffaaaf45e81e0ab"
   },
   {
    "path": "tools/journey/data/JourneyMapCatalog.gd",
@@ -792,15 +813,15 @@
    "path": "tools/journey/data/JourneyMatchRewards.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/data/JourneyMatchRewards.gd",
-   "size": 3094,
-   "sha256": "c4beee23171282b9d541ad2ee02e7c2592a5209d00dc25a1016d6873edd93eb9"
+   "size": 3562,
+   "sha256": "758c07be27a7a0f0880a18f7ebe78a31440a41af7f6da5272330912b32ebb90f"
   },
   {
    "path": "tools/journey/data/JourneyMatchXP.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/data/JourneyMatchXP.gd",
-   "size": 8346,
-   "sha256": "52a264ba64f88c0d63bbcef10421987c9aa2e459a70b833282f5a961146baed6"
+   "size": 10487,
+   "sha256": "e858f5556428e8842e2377a7ee79f6c8fc34ae3b0f09ffa9605279666ff3ce19"
   },
   {
    "path": "tools/journey/data/JourneyMilestones.gd",
@@ -834,15 +855,15 @@
    "path": "tools/journey/data/JourneyStore.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/data/JourneyStore.gd",
-   "size": 11304,
-   "sha256": "121ffd2aa21bc378d9f16782cdfadf198964d5c26d12ae334b15f700d87deb90"
+   "size": 11507,
+   "sha256": "20a4fe9cf84d542390b879d0a88c067c1c734cf573c83ab0c715be98ac3f7851"
   },
   {
    "path": "tools/journey/data/JourneyXPBackfill.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/data/JourneyXPBackfill.gd",
-   "size": 3631,
-   "sha256": "61ec38f14dcc7ba3609894817b0ed8d80b6239fbc42865cc75a67cd4f5ec618c"
+   "size": 6761,
+   "sha256": "93ee51ce350bddb8f0b147a727a085b531d565858758d1d8e2e989dfe96ad1fe"
   },
   {
    "path": "tools/journey/data/journey-map-catalog.json",
@@ -946,8 +967,8 @@
    "path": "tools/journey/ui/JourneyPages/00_state.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/ui/JourneyPages/00_state.gd",
-   "size": 12709,
-   "sha256": "116b2095001c2e62904191069d02339288374dd88f7ec4c1dd5d4660b17cca9a"
+   "size": 12768,
+   "sha256": "f31f106c601b40288520b2c7fc66c65fee5e747610dd914f3a60e160fe0d1b06"
   },
   {
    "path": "tools/journey/ui/JourneyPages/01_placeholders.gd",
@@ -967,15 +988,15 @@
    "path": "tools/journey/ui/JourneyPages/03_map_maps.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/ui/JourneyPages/03_map_maps.gd",
-   "size": 17490,
-   "sha256": "5a03c7a4c84161df6ee49e7f7186f5b0c4c1c32e13434aa25cd1843e559faf59"
+   "size": 17609,
+   "sha256": "396abc6edaabb9b650f76301f3da318ba2ebc8ff6267fd010f25d29ca11803ac"
   },
   {
    "path": "tools/journey/ui/JourneyPages/04_theme_claim.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/ui/JourneyPages/04_theme_claim.gd",
-   "size": 18448,
-   "sha256": "4f0f074da28678d22254cda6697a4cbbca80c21bbb95b93eec840d9acf966ce2"
+   "size": 18507,
+   "sha256": "84656c1bec1151ed098c98a307084398effccee0b3765a5ff9ca8438ba6f4f56"
   },
   {
    "path": "tools/journey/ui/JourneyPages/05_finish_watch.gd",
@@ -995,8 +1016,8 @@
    "path": "tools/journey/ui/JourneyPages/07_pref_tool.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/ui/JourneyPages/07_pref_tool.gd",
-   "size": 18489,
-   "sha256": "35eedf2d80c73926691f3fee18abed05609c2b36c2176576fb42f9e09933aabb"
+   "size": 19560,
+   "sha256": "344ce1dd7bd8b3904d915abccf46b4deb421b6c7c09b397a7685363879811e4b"
   },
   {
    "path": "tools/journey/ui/JourneyPreview.gd",
@@ -1023,8 +1044,8 @@
    "path": "tools/journey/ui/JourneyScreen/00_state.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/ui/JourneyScreen/00_state.gd",
-   "size": 6508,
-   "sha256": "329bf9576a15129f9c48766f3777c954a11c8025a5f542511d73e067ebef9e3a"
+   "size": 6549,
+   "sha256": "22bf0b394f2bc26c32234e48ef9c98b754bbc4d07e6de2ba09b0d4d3f2a4d1f2"
   },
   {
    "path": "tools/journey/ui/JourneyScreen/01_placeholders.gd",
@@ -1037,8 +1058,8 @@
    "path": "tools/journey/ui/JourneyScreen/02_nav_toggle.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/ui/JourneyScreen/02_nav_toggle.gd",
-   "size": 17520,
-   "sha256": "b9614b5188f9e0d67f52bfaffef81b43bd989c8ef81b55fcf316ae23d18cf40a"
+   "size": 17851,
+   "sha256": "69a1956fbc8b609357cf1dc2abc7d3f029cc1e0a18cca4d404aed8cd75704748"
   },
   {
    "path": "tools/journey/ui/JourneyScreen/03_claim_rank.gd",
@@ -1058,8 +1079,8 @@
    "path": "tools/journey/ui/JourneyScreen/05_test_rank.gd",
    "module": "journey",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/journey/ui/JourneyScreen/05_test_rank.gd",
-   "size": 15659,
-   "sha256": "f5bfc3e09171313651dedc9abd464c570cc5f8b33d419783e7d59d24d2a050fc"
+   "size": 18149,
+   "sha256": "a8b33353c45746bb00c8bddfa02b13ad995eb74db8b24ead4c047e7e5786f1a8"
   },
   {
    "path": "tools/journey/ui/JourneyScreen/06_results_toggle.gd",
@@ -1401,8 +1422,15 @@
    "path": "tools/tas-diagnostics/DiagnosticsHandler.gd",
    "module": "diagnostics",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/tas-diagnostics/DiagnosticsHandler.gd",
-   "size": 840,
-   "sha256": "b43e59007dc8ad1c571b9c37750733f545e151b338de73cdabfbfe015862ed43"
+   "size": 1068,
+   "sha256": "4cd4c585dfd12044edf3f9a02ca8104646c393f7e83686fe2c021d6d787841b9"
+  },
+  {
+   "path": "tools/tas-diagnostics/PlayerDataOutline.gd",
+   "module": "diagnostics",
+   "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.0/tools/tas-diagnostics/PlayerDataOutline.gd",
+   "size": 2498,
+   "sha256": "a50b5fe588406a2f5bc7d83cb42a460abb7ec07f5e758a89c9009efe6b9aeba8"
   },
   {
    "path": "tools/tas-diagnostics/TASTool/30_diagnostics_1.gd",

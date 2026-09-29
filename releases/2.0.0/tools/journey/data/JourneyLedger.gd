@@ -201,6 +201,59 @@ func award_batch(batch: Array) -> int:
 	error = ""
 	return added
 
+# Replaces every entry whose id starts with prefix by fresh (Calculate XP rerun).
+# Returns the new total XP, or -1 on error.
+func replace_prefixed(prefix: String, fresh: Array) -> int:
+	if not writable or prefix.empty():
+		error = "Unsupported, invalid or unverified transaction."
+		return -1
+	for entry in fresh:
+		if not _valid(entry) or not str(entry.id).begins_with(prefix):
+			error = "Unsupported, invalid or unverified transaction."
+			return -1
+	if File.new().file_exists(path):
+		var disk = _read()
+		if disk.empty() or int(disk.revision)!=revision:
+			error = "Journey changed elsewhere; reload before awarding."
+			return -1
+	var candidate = []
+	for entry in entries:
+		if not str(entry.id).begins_with(prefix):
+			candidate.append(entry.duplicate(true))
+	for entry in fresh:
+		candidate.append(entry.duplicate(true))
+	var text = JSON.print({"format":1,"account_id":account_id,"revision":revision+1,"entries":candidate})
+	var directory = Directory.new()
+	if directory.make_dir_recursive(path.get_base_dir())!=OK:
+		error = "Cannot create Journey folder."
+		return -1
+	var file = File.new()
+	if file.open(path+".tmp",File.WRITE)!=OK:
+		error = "Cannot save Journey."
+		return -1
+	file.store_string(text)
+	file.flush()
+	var write_error = file.get_error()
+	file.close()
+	if write_error!=OK:
+		error = "Journey write failed."
+		return -1
+	if file.file_exists(path) and directory.copy(path,path+".bak")!=OK:
+		error = "Cannot back up Journey; nothing changed."
+		return -1
+	if directory.rename(path+".tmp",path)!=OK:
+		error = "Cannot commit Journey; nothing changed."
+		return -1
+	entries = candidate
+	ids = {}
+	total_xp = 0
+	for entry in entries:
+		ids[entry.id] = true
+		total_xp += int(entry.amount)
+	revision += 1
+	error = ""
+	return total_xp
+
 func category_totals(from_utc: int = 0,to_utc: int = 9223372036854775807) -> Dictionary:
 	var result = {}
 	for entry in entries:

@@ -249,8 +249,10 @@ func preferences(body):
 	var calc_col = ui.grow(ui.box(calc, true, 2))
 	ui.label(calc_col, "Calculate XP", "h3")
 	ui.label(calc_col, "From your GooberDash wins, games and deaths", "small", ui.MUTED)
-	var done = screen.journey_store.writable and screen.journey_store.flag("notice:xp_calculated")
-	ui.button(calc, "Done" if done else "Calculate", "small", screen, "open_xp_calculator", null, "check" if done else "xp").disabled = done or _m().preview
+	var store = screen.journey_store
+	var calculated = store.writable and store.flag("notice:xp_calculated")
+	var done = calculated and int(store.backfill.get("version", 1)) >= 3
+	ui.button(calc, "Done" if done else ("Recalculate" if calculated else "Calculate"), "small", screen, "open_xp_calculator", null, "check" if done else "xp").disabled = done or _m().preview
 	if screen.debug_mode() or screen.design_preview:
 		ui.label(body, "DEVELOPER", "caps", ui.PINK_LIGHT)
 		var row = ui.box(ui.well(body, ui.NAVY_2, 20, 28), false, 18)
@@ -366,6 +368,9 @@ func xp_calculator(body):
 		xp_backfill = load(ModPaths.path("JourneyXPBackfill.gd")).new()
 	xp_plan = null
 	ui.label(body, "Adds Journey XP for the games you played before Goobplayability. Time trials aren't included.", "small", ui.MUTED)
+	var previous = _calculated_xp()
+	if previous > 0:
+		ui.label(body, "Replaces your earlier calculation (%s)." % ui.xp_text(previous), "small", ui.YELLOW)
 	var status = ui.label(body, "Loading your GooberDash stats…", "body", ui.MUTED)
 	var state = xp_backfill.fetch(screen.get_node_or_null("/root/Moonlight"), str(screen.ledger.account_id))
 	var stats = state
@@ -380,7 +385,8 @@ func xp_calculator(body):
 	var records = _m().stats.store.records if _m().stats != null and _m().stats.get("store") != null else []
 	if map_catalog == null:
 		map_catalog = load(ModPaths.path("JourneyMapCatalog.gd")).new()
-	xp_plan = xp_backfill.plan(stats, records, map_catalog.maps(null).size())
+	map_catalog.maps(null)
+	xp_plan = xp_backfill.plan(stats, records, map_catalog.entries)
 	var kpis = ui.box(body, false, 18)
 	ui.grow(ui.kpi(kpis, ui.thousands(int(stats.GamesPlayed)), "Games", "", ui.WHITE, "flag"))
 	ui.grow(ui.kpi(kpis, ui.thousands(int(stats.GamesWon)), "Wins", "", ui.YELLOW, "crown"))
@@ -396,27 +402,47 @@ func xp_calculator(body):
 	var foot = ui.box(body, false, 14)
 	ui.spacer(foot)
 	ui.button(foot, "Cancel", "secondary", screen, "close_overlay")
-	ui.button(foot, "Add " + ui.xp_text(int(xp_plan.total)), "primary", self, "_add_calculated_xp", null, "check").disabled = int(xp_plan.total) <= 0
+	var label = ("Set to " if previous > 0 else "Add ") + ui.xp_text(int(xp_plan.total))
+	ui.button(foot, label, "primary", self, "_add_calculated_xp", null, "check").disabled = int(xp_plan.total) <= 0 and previous <= 0
 
 func _add_calculated_xp(_arg = null):
 	var store = screen.journey_store
-	if xp_plan == null or not store.writable or store.flag("notice:xp_calculated"):
+	if xp_plan == null or not store.writable:
+		return
+	if store.flag("notice:xp_calculated") and int(store.backfill.get("version", 1)) >= xp_backfill.VERSION:
 		return
 	var owner = str(screen.ledger.account_id)
 	var before = int(screen.ledger.total_xp)
 	var rank_before = screen.definitions.rank_at(before)
 	var now = OS.get_unix_time()
-	var added = screen.ledger.award_batch(xp_backfill.entries(owner, xp_plan, now))
-	if added < 0:
+	var total = screen.ledger.replace_prefixed("backfill:%s:" % owner, xp_backfill.entries(owner, xp_plan, now))
+	if total >= 0:
+		total = screen.ledger.award_batch(xp_backfill.map_entries(owner, xp_plan, now))
+	if total < 0:
 		screen._toast(str(screen.ledger.error) if str(screen.ledger.error) != "" else "Couldn't save the XP.")
 		return
-	store.backfill = {"wins": int(xp_plan.wins), "maps": int(xp_plan.maps), "time": now}
+	var added = int(screen.ledger.total_xp) - before
+	store.backfill = {"wins": int(xp_plan.wins), "maps": int(xp_plan.maps), "map_ids": xp_plan.map_ids, "time": now, "version": xp_backfill.VERSION}
 	store.note("notice:xp_calculated")
 	for item in store.inbox:
-		if item.id == "calculate_xp":
+		if item.id in ["calculate_xp", "recalculate_xp"]:
 			item.state = "read"
 	store.save()
 	screen.close_overlay()
-	screen.play("claim")
-	screen._claim_fx(null, added)
-	screen._after_claim(before, rank_before)
+	if added > 0:
+		screen.play("claim")
+		screen._claim_fx(null, added)
+		screen._after_claim(before, rank_before)
+	else:
+		screen.play("toggle")
+		screen._toast("Calculated XP updated")
+		screen.refresh()
+
+# XP currently in the ledger from Calculate XP.
+func _calculated_xp() -> int:
+	var prefix = "backfill:%s:" % str(screen.ledger.account_id)
+	var total = 0
+	for entry in screen.ledger.entries:
+		if str(entry.id).begins_with(prefix):
+			total += int(entry.amount)
+	return total

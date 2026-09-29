@@ -48,6 +48,8 @@ var sound
 var results = {}
 var header_col
 var header_row
+var intro_spot = null
+var intro_step = 0
 var header_gap
 var scroll
 var content

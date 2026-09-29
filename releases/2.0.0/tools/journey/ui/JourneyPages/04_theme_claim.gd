@@ -169,7 +169,7 @@ func achievement_detail(parent, arg):
 	ui.clickable(badge, self, "_badge_details", {"key":c.key,"tier":max(0,tier-1)})
 	badge.hint_tooltip = "Statistics and rewards"
 	ui.label(hcol, (_tname(c, tier - 1) + " tier") if tier > 0 else "Not started", "h1", ui.WHITE, Label.ALIGN_CENTER)
-	ui.label(hcol, ("%d qualifying level%s" % [int(c.value), "" if int(c.value) == 1 else "s"]) if c.key == "builder" else ("%s recorded" % ui.thousands(c.value)), "body", ui.MUTED, Label.ALIGN_CENTER)
+	ui.label(hcol, ("%d qualifying level%s" % [int(c.value), "" if int(c.value) == 1 else "s"]) if c.key == "builder" else ("Best streak: %d" % int(c.value) if c.key == "streak" else "%s recorded" % ui.thousands(c.value)), "body", ui.MUTED, Label.ALIGN_CENTER)
 	var actions = ui.box(hcol, false, 14)
 	actions.alignment = BoxContainer.ALIGN_CENTER
 	if c.get("unsupported", false):

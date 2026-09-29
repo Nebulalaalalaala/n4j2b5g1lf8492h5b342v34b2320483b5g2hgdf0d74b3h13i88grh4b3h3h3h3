@@ -232,6 +232,63 @@ func _open_prefs():
 func open_xp_calculator(_arg = null):
 	pages.xp_calculator(_overlay("Calculate XP", "xp"))
 
+# First time Journey is opened: a short spotlight over the menu (core/Onboarding.gd marker).
+# The account's own GooberDash stats for Win Streak, at most every 10 minutes.
+func refresh_native_stats():
+	if model.preview or not journey_store.writable or OS.get_unix_time() - int(journey_store.native.get("time", 0)) < 600:
+		return
+	var backfill = load(ModPaths.path("JourneyXPBackfill.gd")).new()
+	var state = backfill.fetch(get_node_or_null("/root/Moonlight"), str(ledger.account_id))
+	var stats = state
+	if state is GDScriptFunctionState:
+		stats = yield(state, "completed")
+	if stats.empty() or not is_instance_valid(self) or not journey_store.writable:
+		return
+	journey_store.native = {"Winstreak": int(stats.get("Winstreak", 0)), "CurrentWinstreak": int(stats.get("CurrentWinstreak", 0)), "time": OS.get_unix_time()}
+	load(ModPaths.path("JourneyMatchXP.gd")).set_streak(str(ledger.account_id), int(stats.get("CurrentWinstreak", 0)))
+	journey_store.save()
+	refresh()
+
+func start_intro():
+	var onboarding = ModPaths.try_load(ModPaths.path("Onboarding.gd"))
+	if onboarding == null or onboarding.seen("journey") or model.preview or intro_spot != null:
+		return
+	intro_spot = load(ModPaths.path("Spotlight.gd")).new()
+	add_child(intro_spot)
+	intro_spot.connect("pressed", self, "_intro_pressed")
+	intro_spot.connect("lost", self, "_intro_show", [], CONNECT_DEFERRED)
+	intro_step = 0
+	_intro_show()
+
+func _intro_show():
+	if intro_spot == null:
+		return
+	if intro_step == 0:
+		intro_spot.show_step(nav_row, "Ranks, quests, maps and rewards", [["Skip", "skip"], ["Next", "next", true]])
+	elif intro_step == 1:
+		intro_spot.show_step(nav_row.find_node("Quests", true, false), "Daily quests and weekly challenges", [["Skip", "skip"], ["Next", "next", true]])
+	else:
+		var gear = null
+		for holder in header_row.get_children():
+			if holder.has_meta("count_key") and holder.get_meta("count_key") == "gear":
+				gear = holder
+		if journey_store.writable and not journey_store.flag("notice:xp_calculated"):
+			intro_spot.show_step(gear, "Add XP for the games you played before Goobplayability", [["Later", "done"], ["Calculate XP", "calculate", true]])
+		else:
+			intro_spot.show_step(gear, "Preferences and Calculate XP", [["Got it", "done", true]])
+
+func _intro_pressed(id):
+	play("click")
+	if id == "next":
+		intro_step += 1
+		_intro_show()
+		return
+	load(ModPaths.path("Onboarding.gd")).mark("journey")
+	intro_spot.queue_free()
+	intro_spot = null
+	if id == "calculate":
+		open_xp_calculator()
+
 func is_admin() -> bool:
 	return str(ledger.account_id) == ADMIN_ID or harness_admin
 

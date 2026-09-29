@@ -6,7 +6,7 @@ extends Reference
 const ID = "core"
 const NAME = "Workspace"
 const SWITCHES = {}
-const KEYS = ["reset-layout", "rollback", "updates"]
+const KEYS = ["reset-layout", "rollback", "updates", "intro"]
 
 func enabled(tas_tool, key: String) -> bool:
 	return not SWITCHES.has(key) or bool(tas_tool.get(SWITCHES[key]))
@@ -19,4 +19,6 @@ func open(tas_tool, key: String) -> String:
 		tas_tool.call("_on_updater_check_now_pressed")
 	elif key == "rollback":
 		tas_tool.call("_on_updater_rollback_pressed")
+	elif key == "intro":
+		tas_tool.call("_replay_onboarding")
 	return ""

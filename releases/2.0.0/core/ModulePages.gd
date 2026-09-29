@@ -29,6 +29,9 @@ func content_for(key):
 	return null
 
 func add_help(page,key):
+	# Simple browsing/account actions need tooltips, not another tutorial page.
+	if not key in ["tab:0","tab:1","tab:2","replays","council"]:
+		return
 	var help = menu.button("?  Tutorial","tutorial:"+key)
 	help.hint_tooltip = "How to use this tool · examples and diagrams"
 	page.add_child(help)
@@ -165,6 +168,8 @@ func style_content(node):
 		style_content(child)
 
 func open_guide(key):
+	if not key in ["tab:0","tab:1","tab:2","replays","council"]:
+		return
 	if not is_instance_valid(tool._game_tools):
 		return
 	var editor = tool._game_tools._editor_plus

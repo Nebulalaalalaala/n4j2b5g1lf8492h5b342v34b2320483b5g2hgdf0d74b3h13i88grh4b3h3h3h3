@@ -73,6 +73,8 @@ func _page_changed(page):
 	if page == screen:
 		_sync_account()
 		screen._select_section("Overview")
+		screen.call_deferred("start_intro")
+		screen.call_deferred("refresh_native_stats")
 
 func _sync_account():
 	var owner = ""

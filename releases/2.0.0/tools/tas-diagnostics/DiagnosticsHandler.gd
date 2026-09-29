@@ -5,8 +5,8 @@ extends Reference
 
 const ID = "tas-diagnostics"
 const NAME = "Developer tools"
-const SWITCHES = {"developer": "_debug_mode_enabled", "logs": "_debug_mode_enabled"}   # menu key -> TASTool setting that enables it
-const KEYS = ["developer", "logs"]
+const SWITCHES = {"developer": "_debug_mode_enabled", "logs": "_debug_mode_enabled", "player-outline": "_debug_mode_enabled"}   # menu key -> TASTool setting that enables it
+const KEYS = ["developer", "logs", "player-outline"]
 
 func enabled(tas_tool, key: String) -> bool:
 	return not SWITCHES.has(key) or bool(tas_tool.get(SWITCHES[key]))
@@ -17,4 +17,7 @@ func open(tas_tool, key: String) -> String:
 		if not tas_tool.get("_debug_mode_enabled"):
 			return "Enable Debug tools in Settings to view the action log."
 		tas_tool.call("_on_log_tab_pressed")
+	elif key == "player-outline":
+		var ModPaths = load("user://mod/core/ModPaths.gd")
+		return load(ModPaths.path("PlayerDataOutline.gd")).new().save(tas_tool.get_tree())
 	return ""

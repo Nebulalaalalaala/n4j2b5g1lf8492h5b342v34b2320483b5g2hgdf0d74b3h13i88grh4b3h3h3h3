@@ -29,6 +29,8 @@ var quests = {}
 var test = {}
 # Calculate XP (JourneyXPBackfill): {"wins": n, "maps": n, "time": unix} counted before tracking began.
 var backfill = {}
+# The account's own GooberDash stats (Winstreak, CurrentWinstreak, time fetched) for Win Streak.
+var native = {}
 
 func configure(owner: String,directory = "user://goobplayability/journey") -> bool:
 	if owner==account_id and (writable or owner.empty()):
@@ -44,6 +46,7 @@ func configure(owner: String,directory = "user://goobplayability/journey") -> bo
 	quests = {}
 	test = {}
 	backfill = {}
+	native = {}
 	writable = false
 	path = ""
 	if owner.empty():
@@ -89,6 +92,8 @@ func configure(owner: String,directory = "user://goobplayability/journey") -> bo
 		test = data.test
 	if data.get("backfill") is Dictionary:
 		backfill = data.backfill
+	if data.get("native") is Dictionary:
+		native = data.native
 	return true
 
 func save() -> bool:
@@ -101,7 +106,7 @@ func save() -> bool:
 	if file.open(temporary,File.WRITE)!=OK:
 		return false
 	file.store_string(JSON.print({"version":VERSION,"account_id":account_id,"pins":pins,"featured":featured,
-		"claimed":claimed,"inbox":inbox,"seen":seen,"baseline":baseline,"quests":quests,"test":test,"backfill":backfill}))
+		"claimed":claimed,"inbox":inbox,"seen":seen,"baseline":baseline,"quests":quests,"test":test,"backfill":backfill,"native":native}))
 	file.close()
 	directory.remove(path)
 	return directory.rename(temporary,path)==OK

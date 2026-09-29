@@ -8,7 +8,8 @@ const ModPaths = preload("user://mod/core/ModPaths.gd")
 # without a map_<name>.png, and thumbnails that match no certified level.
 const REFRESH = 21600
 # 2: lobby levels (game_mode "Lobby", where players wait before a match) are left out.
-const FORMAT = 2
+# 3: certified_at (the level's last update, which is when it was certified; certified levels can't be edited).
+const FORMAT = 3
 const DIRECTORY = "user://goobplayability/journey"
 var busy = false
 var checked = 0.0
@@ -42,7 +43,8 @@ func _fetch(moonlight):
 				continue
 			if mode.to_lower().find("elim") < 0 and int(level.get("player_count",0)) > 0:
 				mode = "%dP" % int(level.player_count)
-			levels.append({"id":str(level.id),"name":str(level.get("name","")).strip_edges(),"author":str(level.get("author_name","")),"mode":mode})
+			var certified_at = load(ModPaths.path("JourneyXPBackfill.gd")).unix(level.get("update_time",level.get("create_time",0)))
+			levels.append({"id":str(level.id),"name":str(level.get("name","")).strip_edges(),"author":str(level.get("author_name","")),"mode":mode,"certified_at":certified_at})
 	if levels.empty():
 		return
 	_write("certified-levels.json",{"format":FORMAT,"fetched_at":OS.get_unix_time(),"levels":levels})

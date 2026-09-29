@@ -10,8 +10,7 @@ file's size and SHA-256 before installing. Installs only receive files for the
 tools they have (from `installed.json`).
 
 Every replaced file is backed up first and can be restored from
-Settings → Client Tools → Updates → Roll Back.
+Settings → Interface & updates → Roll back last update.
 
 Releases carry code and data files; images, sounds and fonts come with the
-installer. Don't rewrite an existing release folder: publish a new version,
-and update `manifest.json` in the same commit.
+installer.

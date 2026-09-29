@@ -360,3 +360,9 @@ func _watch_practice_start_request() -> void:
 
 func _watch_saved_macro_autoplay(delta: float) -> void:
 	pass
+
+func _check_first_launch() -> String:
+	return ""
+
+func _start_onboarding(hide_overlay: bool) -> void:
+	pass

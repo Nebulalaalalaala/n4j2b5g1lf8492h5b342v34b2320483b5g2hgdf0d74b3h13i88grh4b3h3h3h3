@@ -16,6 +16,7 @@ var previous: Button
 var next: Button
 var title_label
 var custom_pages = false
+var screenshot: TextureRect
 
 func set_pages(content,title):
 	custom_pages = true
@@ -59,6 +60,13 @@ func build(owner) -> void:
 	diagram.rect_min_size = Vector2(600, 150)
 	diagram.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	body.add_child(diagram)
+	screenshot = TextureRect.new()
+	screenshot.expand = true
+	screenshot.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	screenshot.rect_min_size = Vector2(600,250)
+	screenshot.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	screenshot.hide()
+	body.add_child(screenshot)
 	caption = host._label("", 13, Color("9ba8ad"))
 	caption.autowrap = true
 	caption.rect_min_size.y = 36
@@ -103,6 +111,17 @@ func button(parent, title: String, method: String, binds: Array = []) -> Button:
 	return control
 
 func open(section: String = "") -> void:
+	# A single local, in-memory capture of the actual tool, never uploaded or
+	# saved. No continuous capture overhead and no fabricated demonstration.
+	if custom_pages and not visible:
+		var frame = get_viewport().get_texture().get_data()
+		if frame != null and not frame.empty():
+			frame.flip_y()
+			var texture = ImageTexture.new()
+			texture.create_from_image(frame,Texture.FLAG_FILTER)
+			screenshot.texture = texture
+			screenshot.show()
+			diagram.hide()
 	var index = 0
 	for i in pages.size():
 		if pages[i].section == section:
@@ -115,6 +134,9 @@ func open(section: String = "") -> void:
 
 func close() -> void:
 	hide()
+	screenshot.texture = null
+	screenshot.hide()
+	diagram.show()
 	if not custom_pages and is_instance_valid(host.section_choice):
 		host.section_choice.grab_focus()
 

@@ -103,6 +103,9 @@ func _toggle_overlay_hidden() -> void:
 	# Checkpoint markers live in world space under WPGame rather than under the
 	# overlay CanvasLayer, so F1 must explicitly mirror their visibility too.
 	_set_practice_markers_visible(not _overlay_hidden)
+	# F1 opens Goobplayability: showing it also opens the menu.
+	if not _overlay_hidden and not _menu_open:
+		_set_menu_open(true)
 	_update_mouse_capture()
 
 

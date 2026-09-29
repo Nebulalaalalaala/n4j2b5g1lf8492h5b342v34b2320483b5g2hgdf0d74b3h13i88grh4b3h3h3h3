@@ -29,6 +29,15 @@ func round_awards(owner, match_id, round_data, now):
 			out.append(entry(owner,root+":first","placement","Race first place",related,rewards.race_first,now))
 	return out
 
+# Repeatable: every 5 wins in a row while playing (5, 10, 15 ...), bigger for longer streaks.
+const STREAK_XP = {5:2500,10:7500,15:15000,20:25000,25:40000}
+
+func streak_award(owner, match_id, streak, now):
+	if owner.empty() or match_id.empty() or streak<5 or streak%5!=0:
+		return []
+	var amount = STREAK_XP.get(streak,40000+20000*(streak-25)/5)
+	return [entry(owner,"streak:"+match_id+":"+str(streak),"win","Win streak · %d in a row" % streak,match_id,amount,now)]
+
 func world_record_awards(owner,map_id,baseline,records,finish_time,certified,now):
 	if owner.empty() or map_id.empty() or not certified or baseline==null or records.empty() or finish_time<=0:
 		return []

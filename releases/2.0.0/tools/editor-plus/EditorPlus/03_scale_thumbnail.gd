@@ -1,8 +1,9 @@
 extends "user://mod/tools/editor-plus/EditorPlus/02_mirror_selection.gd"
+const GuidePaths = preload("user://mod/core/ModPaths.gd")
 
 func show_guide() -> void:
 	if not is_instance_valid(guide):
-		guide = load(get_script().resource_path.get_base_dir().plus_file("EditorGuide.gd")).new()
+		guide = load(GuidePaths.path("EditorGuide.gd")).new()
 		add_child(guide)
 		guide.build(self)
 	guide.open()

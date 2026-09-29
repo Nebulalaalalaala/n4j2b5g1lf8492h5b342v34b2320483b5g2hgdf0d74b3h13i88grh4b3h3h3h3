@@ -183,6 +183,9 @@ func _connect_local(m):
 	if not m.preview and not journey_store.flag("notice:xp_calculated"):
 		journey_store.push({"id": "calculate_xp", "kind": "reward", "state": "unread", "title": "Calculate your XP",
 			"detail": "Add XP for the games you played before Goobplayability", "time": OS.get_unix_time(), "target": {"view": "calculate_xp"}})
+	elif not m.preview and int(journey_store.backfill.get("version", 1)) < 3:
+		journey_store.push({"id": "recalculate_xp", "kind": "reward", "state": "unread", "title": "Calculated XP was rebalanced",
+			"detail": "Recalculate to include maps you have likely played", "time": OS.get_unix_time(), "target": {"view": "calculate_xp"}})
 	if m.stats != null and m.stats.get("store") != null:
 		m.quests = quest_rules.build(m.stats.records, journey_store, m.activity)
 		for q in m.quests.daily + m.quests.weekly:

@@ -86,6 +86,7 @@ const COLLECTIONS = [
 	["clock", "Against the Clock", "Verified personal bests and world records."],
 	["builder", "Goob Builder", "Publish eligible levels."],
 	["conqueror", "Map Conqueror", "Finish first on eligible public maps."],
+	["streak", "Win Streak", "Win public matches in a row."],
 ]
 
 class FinishPreview extends Control:

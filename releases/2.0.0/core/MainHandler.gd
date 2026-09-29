@@ -28,7 +28,7 @@ const KEY_NEEDS = {
 	"rated": "MatchMapPreview.gd", "wins": "WinsLeaderboard.gd", "game": "GameTools.gd",
 	"accounts": "AccountAccess.gd", "editor-plus": "EditorPlus.gd", "themes": "EditorThemePack.gd",
 	"tab:0": "TasHandler.gd", "tab:1": "TasHandler.gd", "timeline": "TASMacroEditor.gd",
-	"tab:2": "AutoplayBot.gd", "developer": "DiagnosticsHandler.gd", "logs": "DiagnosticsHandler.gd",
+	"tab:2": "AutoplayBot.gd", "developer": "DiagnosticsHandler.gd", "logs": "DiagnosticsHandler.gd", "player-outline": "DiagnosticsHandler.gd",
 }
 const SETTING_NEEDS = {
 	"_sandbox_gui_enabled": "CosmeticSandbox.gd", "_replay_hub_gui_enabled": "ReplayHub.gd",

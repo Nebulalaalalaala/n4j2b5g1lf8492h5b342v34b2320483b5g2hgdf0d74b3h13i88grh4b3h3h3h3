@@ -319,3 +319,34 @@ func _set_stop_on_desync_enabled(value: bool) -> void:
 	_replay_check_stop_on_desync = value
 	SavedSettings.set_value(SETTING_STOP_ON_DESYNC, value)
 	_refresh_practice_ui()
+
+
+func _check_first_launch() -> String:
+	var onboarding = ModPaths.try_load(ModPaths.path("Onboarding.gd"))
+	if onboarding == null:
+		return ""
+	var result: String = onboarding.check_first_launch()
+	# Installer installs start with every tool switched off, on the very first launch only.
+	if result == "new" and File.new().file_exists(ModPaths.ROOT + "installed.json"):
+		for setting in [SETTING_SANDBOX_GUI, SETTING_REPLAY_HUB_GUI, SETTING_GAME_TOOLS_GUI, SETTING_SOCIAL_HUB_GUI, SETTING_COSMETIC_LOADOUTS_GUI,
+				SETTING_EDITOR_THEME_PACK, SETTING_MATCH_MAP_PREVIEW, SETTING_WINS_LEADERBOARD, SETTING_LEADERBOARD_SEARCH, SETTING_CUSTOM_LOBBY_CODE]:
+			SavedSettings.set_value(setting, false)
+	return result
+
+
+func _start_onboarding(hide_overlay: bool) -> void:
+	var onboarding = ModPaths.try_load(ModPaths.path("Onboarding.gd"))
+	if onboarding == null or onboarding.seen("tour") or has_node("GoobOnboarding"):
+		return
+	var tour: Node = onboarding.new()
+	tour.name = "GoobOnboarding"
+	add_child(tour)
+	tour.call("start", self, hide_overlay)
+
+
+func _replay_onboarding() -> void:
+	var onboarding = ModPaths.try_load(ModPaths.path("Onboarding.gd"))
+	if onboarding == null:
+		return
+	onboarding.replay()
+	_start_onboarding(false)

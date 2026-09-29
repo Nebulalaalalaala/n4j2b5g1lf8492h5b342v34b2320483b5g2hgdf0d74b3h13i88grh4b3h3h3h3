@@ -21,6 +21,7 @@ var poisoned = false
 var trial_baseline = null
 var trial_checked = false
 var retry_after = 0
+var saw_over = false
 
 func _ready():
 	policy = load(ModPaths.path("JourneyMatchRewards.gd")).new()
@@ -44,6 +45,10 @@ func _process(delta):
 		xp_before = -1
 	var next = service.game if is_instance_valid(service.game) else null
 	if next!=game:
+		# Left a public match before it ended: that breaks a win streak, as in the game.
+		if not match_id.empty() and not saw_over and not poisoned:
+			set_streak(account_id, 0)
+		saw_over = false
 		_commit()
 		_disconnect()
 		game = next
@@ -90,6 +95,10 @@ func _sample(delta):
 	var number = int(game.wp_game_data.gameplay_round_counter)
 	if number<=0:
 		return
+	# Do not bind a new round to the previous/lobby level during a transition.
+	# Finish callbacks still sample the already observed round after regular play.
+	if number!=current and not game.is_in_regular_play():
+		return
 	var observed_id = str(game.wp_game_data.match_id)
 	# Public games report the placeholder "match_id not set"; treat it as empty
 	# so every match gets its own award ids.
@@ -113,6 +122,14 @@ func _sample(delta):
 		var level = game.level.loaded_level
 		rounds[number] = {"number":number,"eligible":true,"map_id":str(level.level_id),
 			"race":level.level_type==LevelUtils.LevelType.RACE,"active":0.0,"distance":0.0,"rank":0}
+	# A finish signal can arrive before this observer connects, or be missed
+	# during a frame stall. The replicated rank is authoritative too. Only use
+	# it in active race play: transition resets and elimination ranks differ.
+	if game.is_in_regular_play() and rounds[number].race and not player.eliminated:
+		var replicated_rank = int(player.rank)
+		if replicated_rank>0 and int(rounds[number].rank)==0:
+			rounds[number].rank = replicated_rank
+			_queue_round()
 	if game.is_in_regular_play() and player.alive and not player.eliminated:
 		var inputs = game.local_client_continuous_input
 		var moving = inputs.size()>0 and inputs[0]!=null and abs(float(inputs[0]))>0
@@ -143,11 +160,20 @@ func _eliminated(id):
 func _over(id):
 	if not _eligible():
 		return
+	# Catch a final race finish whose result signal precedes our callback.
+	var player = game.get_local_player()
+	if rounds.has(current) and int(game.wp_game_data.gameplay_round_counter)==current and rounds[current].race and not player.eliminated and int(player.rank)>0:
+		rounds[current].rank = int(player.rank)
 	_queue_round()
 	winner = game.is_local_player(id)
 	var now = OS.get_unix_time()
 	var day = str(int(floor(float(now+int(OS.get_time_zone_info().get("bias",0))*60)/86400.0)))
 	queued.append_array(policy.match_awards(account_id,match_id,rounds,winner,now,day))
+	if not saw_over:
+		saw_over = true
+		var streak = streak_of(account_id)+1 if winner else 0
+		set_streak(account_id,streak)
+		queued.append_array(policy.streak_award(account_id,match_id,streak,now))
 	terminal = true
 	terminal_age = 0.0
 
@@ -250,3 +276,19 @@ func _world_record():
 	queued.append_array(policy.world_record_awards(account_id,p.level_id,trial_baseline,records,game.time_trial_finish_time,eligible,OS.get_unix_time()))
 	terminal = true
 	terminal_age = 0.0
+
+# Current win streak per account, counted from observed public matches and
+# re-synced from the account's GooberDash stats whenever Journey reads them.
+static func streak_of(owner:String) -> int:
+	var config = ConfigFile.new()
+	if owner.empty() or config.load("user://goobplayability/journey".plus_file(owner.sha256_text()+".streak.cfg"))!=OK:
+		return 0
+	return int(config.get_value("streak","current",0))
+
+static func set_streak(owner:String,value:int) -> void:
+	if owner.empty():
+		return
+	var config = ConfigFile.new()
+	config.set_value("streak","current",max(0,value))
+	Directory.new().make_dir_recursive("user://goobplayability/journey")
+	config.save("user://goobplayability/journey".plus_file(owner.sha256_text()+".streak.cfg"))

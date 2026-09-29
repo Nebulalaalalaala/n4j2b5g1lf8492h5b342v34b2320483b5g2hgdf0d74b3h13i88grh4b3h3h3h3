@@ -22,7 +22,8 @@ func _map_items() -> Array:
 		var knockout = str(map.mode) == "Knockout"
 		var trial = str(map.key).begins_with("time_trial:")
 		var obj = []
-		obj.append({"key": "discover", "label": "Discovered", "icon": "compass", "done": int(map.plays) > 0, "detail": "Recorded %d time%s" % [int(map.plays), "" if int(map.plays) == 1 else "s"], "xp": MAP_XP.discover})
+		var calculated = screen.ledger.ids.has("map:%s:discover:%s" % [map_id, str(screen.ledger.account_id)])
+		obj.append({"key": "discover", "label": "Discovered", "icon": "compass", "done": int(map.plays) > 0 or calculated, "detail": "Recorded %d time%s" % [int(map.plays), "" if int(map.plays) == 1 else "s"], "xp": MAP_XP.discover})
 		if knockout:
 			obj.append({"key": "win", "label": "Last survivor", "icon": "crown", "done": int(map.wins) > 0, "detail": "%d recorded win%s" % [int(map.wins), "" if int(map.wins) == 1 else "s"], "xp": MAP_XP.first})
 		else:

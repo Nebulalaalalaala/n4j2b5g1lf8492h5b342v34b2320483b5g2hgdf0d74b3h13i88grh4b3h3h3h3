@@ -81,7 +81,9 @@ func _ready() -> void:
 	var window_geometry_script = ModPaths.try_load(WINDOW_GEOMETRY_SCRIPT_PATH)
 	if window_geometry_script != null and window_geometry_script.can_instance():
 		_window_geometry = window_geometry_script.new()
+	var first_launch := _check_first_launch()
 	_load_client_tool_preferences()
+	call_deferred("_start_onboarding", first_launch == "new")
 	_load_gui_layout_store()
 	_load_practice_macro_slots_from_disk()
 	var updater_script = ModPaths.try_load(UPDATER_SCRIPT_PATH)
@@ -199,6 +201,10 @@ func _ready() -> void:
 	_apply_menu_open_state()
 	_apply_log_open_state()
 	_apply_tas_gui_visibility()
+	# The menu stays hidden until F1; hitboxes and other world overlays still show.
+	_toggle_overlay_hidden()
+	if _world_overlay != null and is_instance_valid(_world_overlay):
+		_world_overlay.visible = true
 	_refresh_practice_ui() # picks up the just-loaded Debug Mode state on the buttons built in _build_overlay() above
 	call_deferred("_initialize_main_gui_layout")
 	call_deferred("_scan_for_client_tool_settings", get_tree().root)

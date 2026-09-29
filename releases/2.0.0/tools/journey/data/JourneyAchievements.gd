@@ -18,6 +18,9 @@ const COLLECTIONS = [
 	["clock","Against the Clock","Beat your own time-trial record.","clock",[3,10,25,60,120,200,275,350,425,500]],
 	["builder","Goob Builder","Publish levels with more than 200 objects.","builder",[1,3,7,15,30,50,70,90,110,130]],
 	["conqueror","Map Conqueror","Finish first on different public maps.","conqueror",[5,15,40,80,150,250,325,400,475,550]],
+	# Best win streak from the account's GooberDash stats (store.native, see JourneyStore).
+	# The optional 6th value multiplies the tier XP (streaks are far rarer than the other counts).
+	["streak","Win Streak","Win public matches in a row.","streak",[5,10,15,20,25,30,33,36,39,42],5],
 ]
 
 static func tier_name(tier:int) -> String:
@@ -38,7 +41,10 @@ static func threshold(base:Array,tier:int) -> int:
 func build(records:Array,store,builder = null) -> Dictionary:
 	var ordered = records.duplicate()
 	ordered.sort_custom(self,"_earlier")
-	var events = {"exploration":[],"crown":[],"podium":[],"clock":[],"conqueror":[]}
+	var events = {"exploration":[],"crown":[],"podium":[],"clock":[],"conqueror":[],"streak":[]}
+	if store!=null and store.get("native") is Dictionary:
+		for i in int(clamp(int(store.native.get("Winstreak",0)),0,1000)):
+			events.streak.append(int(store.native.get("time",0)))
 	var maps = {}
 	var firsts = {}
 	var best = {}
@@ -81,11 +87,21 @@ func build(records:Array,store,builder = null) -> Dictionary:
 	# Wins and likely maps from Calculate XP count toward Crown Collector and Map Explorer.
 	if store!=null and store.get("backfill") is Dictionary and not store.backfill.empty():
 		var when = int(store.backfill.get("time",0))
-		for pair in [["crown","wins"],["exploration","maps"]]:
-			var extra = []
-			for i in int(clamp(int(store.backfill.get(pair[1],0)),0,100000)):
+		var extra = []
+		for i in int(clamp(int(store.backfill.get("wins",0)),0,100000)):
+			extra.append(when)
+		events.crown = extra+events.crown
+		# Likely-played maps count once, and only until the map shows up in recorded history.
+		extra = []
+		var ids = store.backfill.get("map_ids",null)
+		if ids is Array:
+			for id in ids:
+				if not maps.has(id):
+					extra.append(when)
+		else:
+			for i in int(clamp(int(store.backfill.get("maps",0)),0,100000)):
 				extra.append(when)
-			events[pair[0]] = extra+events[pair[0]]
+		events.exploration = extra+events.exploration
 	if builder!=null:
 		var times = []
 		for level in builder.levels:
@@ -116,7 +132,7 @@ func build(records:Array,store,builder = null) -> Dictionary:
 		for i in range(count):
 			var t = threshold(thresholds,i+1)
 			c.thresholds.append(t)
-			c.xp.append(TIER_XP[i] if i<TIER_XP.size() else KINGLY_XP)
+			c.xp.append((TIER_XP[i] if i<TIER_XP.size() else KINGLY_XP)*(int(entry[5]) if entry.size()>5 else 1))
 			c.dates.append(int(list[t-1]) if list.size()>=t else 0)
 			c.tier_names.append(tier_name(i+1))
 		if store!=null:
