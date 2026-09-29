@@ -1,7 +1,8 @@
 extends Node
 const ModPaths = preload("user://mod/core/ModPaths.gd")
 
-# Restores settings access and routes switching through the guarded Account Manager.
+# Keeps the game's log-out button in step and routes switching through the guarded Account
+# Manager (opened from the Goobplayability menu → Accounts).
 const SETTINGS_SCENE = "res://ui/nodes/UISettingsDialog.tscn"
 var _settings = []
 var _signin_groups = []
@@ -40,26 +41,6 @@ func _consider(node: Node) -> void:
 			var logout = node.get("log_out_button")
 			if logout != null and not logout.is_connected("visibility_changed", self, "_refresh"):
 				logout.connect("visibility_changed", self, "_refresh")
-			var parent = logout.get_parent() if logout != null else null
-			if parent != null and parent.get_node_or_null("GoobSignIn") == null:
-				var signin = Button.new()
-				signin.name = "GoobSignIn"
-				signin.text = "Account manager"
-				signin.rect_min_size.y = 54
-				var button_font = DynamicFont.new()
-				var data = DynamicFontData.new()
-				data.font_path = ModPaths.MAIN_FONT
-				button_font.font_data = data
-				button_font.size = 32
-				signin.rect_min_size.y = 90
-				signin.add_font_override("font", button_font)
-				var style = StyleBoxFlat.new()
-				style.bg_color = Color("30483d")
-				style.set_corner_radius_all(8)
-				signin.add_stylebox_override("normal", style)
-				signin.connect("pressed", self, "open_signin")
-				parent.add_child(signin)
-				parent.move_child(signin, logout.get_index() + 1)
 	elif node.name == "LoginSignup" and node is CanvasItem:
 		if not _signin_groups.has(node):
 			_signin_groups.append(node)

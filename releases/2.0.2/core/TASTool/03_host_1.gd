@@ -207,7 +207,6 @@ func _ready() -> void:
 		_world_overlay.visible = true
 	_refresh_practice_ui() # picks up the just-loaded Debug Mode state on the buttons built in _build_overlay() above
 	call_deferred("_initialize_main_gui_layout")
-	call_deferred("_scan_for_client_tool_settings", get_tree().root)
 	call_deferred("_show_changelog_if_needed")
 	# Deferred so _cosmetic_sandbox/_macro_editor (created further above in
 	# this same _ready(), after _build_overlay()) both already exist by the

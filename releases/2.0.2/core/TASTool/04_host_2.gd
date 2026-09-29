@@ -477,8 +477,6 @@ func _physics_process(delta: float) -> void:
 
 
 func _on_tas_tree_node_added(node: Node) -> void:
-	if node != null and node.name == "UISettingsDialog":
-		call_deferred("_inject_client_tool_settings", node)
 	if node != null and node.name == "LeaderboardScript" and node.has_method("on_leaderboard_row_pressed"):
 		call_deferred("_inject_leaderboard_search", node)
 	if node != null and node.name == "CustomLobbyScene" and node.has_method("on_create_lobby_button_pressed"):

@@ -4,7 +4,9 @@ extends "user://mod/core/TASTool/07_windows_2.gd"
 #  Native Settings integration / persistent client-tool visibility
 # ----------------------------------------------------------------------
 func _load_client_tool_preferences() -> void:
-	_tas_gui_enabled = bool(SavedSettings.get_value(SETTING_TAS_GUI, true))
+	# The Goobplayability GUI is always available now (F1 shows or hides it); the old off
+	# switch lived in the game's settings and is gone, so a saved "off" is ignored.
+	_tas_gui_enabled = true
 	_sandbox_gui_enabled = bool(SavedSettings.get_value(SETTING_SANDBOX_GUI, true))
 	_replay_hub_gui_enabled = bool(SavedSettings.get_value(SETTING_REPLAY_HUB_GUI, false))
 	_game_tools_gui_enabled = bool(SavedSettings.get_value(SETTING_GAME_TOOLS_GUI, false))
@@ -32,114 +34,6 @@ func _load_client_tool_preferences() -> void:
 	_claude_experimental_icons_enabled = bool(SavedSettings.get_value(SETTING_CLAUDE_EXPERIMENTAL_ICONS, false))
 	for category in _hitbox_categories.keys():
 		_hitbox_categories[category] = bool(SavedSettings.get_value(SETTING_HITBOX_CATEGORY_PREFIX + str(category), category == "player"))
-
-
-func _inject_client_tool_settings(settings_dialog: Node) -> void:
-	if settings_dialog == null or not is_instance_valid(settings_dialog) or not settings_dialog.is_inside_tree():
-		return
-	var settings_parent = settings_dialog.get_node_or_null("UIDialog/Panel/DialogRoot/ScrollContainer/MarginContainer/Columns/Settings")
-	if settings_parent == null or settings_parent.get_node_or_null("ClientToolsSettings") != null:
-		return
-	var section := VBoxContainer.new()
-	section.name = "ClientToolsSettings"
-	section.add_constant_override("separation", 10)
-	settings_parent.add_child(section)
-	var divider := HSeparator.new()
-	section.add_child(divider)
-	var heading_row := HBoxContainer.new()
-	heading_row.add_constant_override("separation", 12)
-	section.add_child(heading_row)
-	var icon := TextureRect.new()
-	icon.texture = load("res://project_specific/gfx/icons/icon_settings.png")
-	icon.expand = true
-	icon.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
-	icon.rect_min_size = Vector2(44, 44)
-	heading_row.add_child(icon)
-	var heading := _make_label("CLIENT TOOLS", _header_font, COLOR_WHITE)
-	heading.valign = Label.VALIGN_CENTER
-	heading_row.add_child(heading)
-	var description := _make_label("Choose which client interfaces are available. Changes persist after restarting.", _small_font, COLOR_TEXT_DIM)
-	description.autowrap = true
-	section.add_child(description)
-	_add_native_settings_toggle(section, "GOOBPLAYABILITY GUI", _tas_gui_enabled, "_on_settings_tas_gui_toggled")
-	_add_native_settings_toggle(section, "AVATAR SANDBOX GUI", _sandbox_gui_enabled, "_on_settings_sandbox_gui_toggled")
-	_add_native_settings_toggle(section, "COMMUNITY REPLAY HUB", _replay_hub_gui_enabled, "_on_settings_replay_hub_gui_toggled")
-	_add_native_settings_toggle(section, "LEADERBOARD PLAYER SEARCH", _leaderboard_search_enabled, "_on_settings_leaderboard_search_toggled")
-	_add_native_settings_toggle(section, "CUSTOM LOBBY CODE", _custom_lobby_code_enabled, "_on_settings_custom_lobby_code_toggled")
-	_add_native_settings_toggle(section, "GAME TOOLS", _game_tools_gui_enabled, "_on_settings_game_tools_gui_toggled")
-	_add_native_settings_toggle(section, "FRIENDS & PARTY", _social_hub_gui_enabled, "_on_settings_social_hub_gui_toggled")
-	_add_native_settings_toggle(section, "COSMETIC LOADOUTS", _cosmetic_loadouts_gui_enabled, "_on_settings_cosmetic_loadouts_toggled")
-	_add_native_settings_toggle(section, "EDITOR THEME PACK", _editor_theme_pack_enabled, "_on_settings_editor_theme_pack_toggled")
-	_add_native_settings_toggle(section, "PUBLIC MATCH MAP PREVIEW", _match_map_preview_enabled, "_on_settings_match_map_preview_toggled")
-	_add_native_settings_toggle(section, "HIGHEST WINS LEADERBOARD", _wins_leaderboard_enabled, "_on_settings_wins_leaderboard_toggled")
-	_add_native_settings_toggle(section, "GOOBPLAYABILITY DEBUG", _debug_mode_enabled, "_on_settings_debug_mode_toggled")
-	_add_native_settings_toggle(section, "LEGACY TITLE ART", _claude_experimental_icons_enabled, "_on_settings_claude_experimental_icons_toggled")
-	var experimental_note := _make_label("Optional title illustrations for secondary windows.", _small_font, COLOR_TEXT_DIM)
-	experimental_note.autowrap = true
-	section.add_child(experimental_note)
-	var reset_layout := _make_button("RESET GUI LAYOUT", COLOR_BLUE, 260)
-	reset_layout.hint_tooltip = "Restore all Goobplayability windows to their default positions and sizes."
-	reset_layout.size_flags_horizontal = Control.SIZE_SHRINK_CENTER
-	reset_layout.connect("pressed", self, "_on_reset_gui_layout_pressed")
-	section.add_child(reset_layout)
-	var update_divider := HSeparator.new()
-	section.add_child(update_divider)
-	var update_heading := _make_label("UPDATES", _header_font, COLOR_WHITE)
-	section.add_child(update_heading)
-	_add_native_settings_toggle(section, "CHECK FOR UPDATES", _update_checks_enabled, "_on_settings_update_checks_toggled")
-	var version_row := HBoxContainer.new()
-	version_row.add_constant_override("separation", 14)
-	section.add_child(version_row)
-	var current_label := _make_label("CURRENT  " + GOOBPLAYABILITY_VERSION, _body_font, COLOR_WHITE)
-	current_label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	version_row.add_child(current_label)
-	_updater_latest_label = _make_label("LATEST  --", _body_font, COLOR_TEXT_DIM)
-	version_row.add_child(_updater_latest_label)
-	var update_actions := HBoxContainer.new()
-	update_actions.add_constant_override("separation", 10)
-	section.add_child(update_actions)
-	var check_now := _make_button("CHECK NOW", COLOR_BLUE, 190)
-	check_now.hint_tooltip = "Check the pinned HTTPS release manifest. Nothing installs automatically."
-	check_now.connect("pressed", self, "_on_updater_check_now_pressed")
-	update_actions.add_child(check_now)
-	_updater_install_button = _make_button("INSTALL UPDATE", COLOR_PLAY_GREEN, 220)
-	_updater_install_button.disabled = _pending_update_manifest.empty()
-	_updater_install_button.connect("pressed", self, "_on_updater_install_pressed")
-	update_actions.add_child(_updater_install_button)
-	_updater_rollback_button = _make_button("ROLL BACK", COLOR_PINK, 190)
-	_updater_rollback_button.hint_tooltip = "Restore the backup created immediately before the last update."
-	_updater_rollback_button.disabled = _updater == null or not bool(_updater.call("has_rollback"))
-	_updater_rollback_button.connect("pressed", self, "_on_updater_rollback_pressed")
-	update_actions.add_child(_updater_rollback_button)
-	_updater_status_label = _make_label("Updater is idle.", _small_font, COLOR_TEXT_DIM)
-	_updater_status_label.autowrap = true
-	section.add_child(_updater_status_label)
-
-
-func _scan_for_client_tool_settings(node: Node) -> void:
-	if node == null:
-		return
-	if node.name == "UISettingsDialog":
-		_inject_client_tool_settings(node)
-	for child in node.get_children():
-		_scan_for_client_tool_settings(child)
-
-
-func _add_native_settings_toggle(parent: VBoxContainer, title: String, initial: bool, callback: String) -> void:
-	var row := HBoxContainer.new()
-	row.rect_min_size = Vector2(0, 66)
-	parent.add_child(row)
-	var label := _make_label(title, _body_font, COLOR_WHITE)
-	label.size_flags_horizontal = Control.SIZE_EXPAND_FILL
-	label.valign = Label.VALIGN_CENTER
-	row.add_child(label)
-	var toggle := CheckButton.new()
-	toggle.pressed = initial
-	toggle.flat = true
-	toggle.focus_mode = Control.FOCUS_NONE
-	toggle.rect_min_size = Vector2(110, 60)
-	toggle.connect("toggled", self, callback)
-	row.add_child(toggle)
 
 
 func _load_claude_icon(icon_name: String, size: int = 40) -> Texture:

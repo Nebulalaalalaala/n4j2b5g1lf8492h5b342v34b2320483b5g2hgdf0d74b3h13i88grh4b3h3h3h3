@@ -2,7 +2,7 @@
  "schema": 2,
  "version": "2.0.2",
  "game_compatibility": "goober-dash-2026-08-04-godot-3.5.1",
- "changelog": "Journey leaderboard rows open GooberDash profiles; Journey follows account switching with per-account progress; fixes for leaderboard names.",
+ "changelog": "Client tools, updates and the account manager are now only in the Goobplayability menu; a short What's new note; Journey leaderboard rows open GooberDash profiles; Journey follows account switching with per-account progress.",
  "files": [
   {
    "path": "TASTool.gd",
@@ -15,8 +15,8 @@
    "path": "core/CoreHandler.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.2/core/CoreHandler.gd",
-   "size": 841,
-   "sha256": "f35d2b6e171d73db78a8147bd0eedfb138decb9d2f042fde5fd745a7b32996d3"
+   "size": 1055,
+   "sha256": "63ff961ac854da715a5966c239cef09cb24d479f2a0746bba3bcd1a8732a36eb"
   },
   {
    "path": "core/DataMigration.gd",
@@ -113,15 +113,15 @@
    "path": "core/TASTool/03_host_1.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.2/core/TASTool/03_host_1.gd",
-   "size": 16351,
-   "sha256": "89d56b0cc3c4aa14ec759e8ec6a12d6ef8ac1b95ef9455dd48473b1c8c03c866"
+   "size": 16285,
+   "sha256": "bf336824aa7b6f35c68ac37f4b1c8253aeecb4178454b53d036ecfbe849965b8"
   },
   {
    "path": "core/TASTool/04_host_2.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.2/core/TASTool/04_host_2.gd",
-   "size": 30951,
-   "sha256": "7936e7d8f05ba1c21363f01e80b8101199c3817a1b785b9f8b35a0d552cfd5ec"
+   "size": 30843,
+   "sha256": "e887f5fb4010aca068b892b0169e0ddfca9d9e252880cb858ba9d05210f6a2ea"
   },
   {
    "path": "core/TASTool/05_game_lookup.gd",
@@ -141,15 +141,15 @@
    "path": "core/TASTool/07_windows_2.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.2/core/TASTool/07_windows_2.gd",
-   "size": 11642,
-   "sha256": "ca9b1c0e2959ea475c3ae3401d117933a15eea22ebdab10962383164b81db62d"
+   "size": 11617,
+   "sha256": "93d16fc60e51538af7fa61c355a301395b2a32abf0e2a03b9f032792c4af9e52"
   },
   {
    "path": "core/TASTool/08_settings.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.2/core/TASTool/08_settings.gd",
-   "size": 18092,
-   "sha256": "25a259327e1ce9bf27e7c2b00f89c1cb7f06744e65c7b22d52977d9cbfb837a3"
+   "size": 11791,
+   "sha256": "eb7770e1336930a8955c29e746e0d61745b94d58776c090e0e603e958b1f476d"
   },
   {
    "path": "core/TASTool/09_ui_kit.gd",
@@ -183,8 +183,8 @@
    "path": "core/TASTool/13_changelog.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.2/core/TASTool/13_changelog.gd",
-   "size": 21655,
-   "sha256": "9a4de9b52734b81d7a588d37c72d75c02b16d00c6c5de95c8d539eeb5a34cdbe"
+   "size": 3813,
+   "sha256": "307bc7de31e829a4cd3613380a14ff6d00c205cd9e19408f7704dd79aebf0114"
   },
   {
    "path": "core/TASTool/14_input_and_menu.gd",
@@ -197,8 +197,8 @@
    "path": "core/WorkspaceMenu.gd",
    "module": "core",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.2/core/WorkspaceMenu.gd",
-   "size": 24815,
-   "sha256": "d8b13db42d9bd31b6f56c87232fb894e976d38b5c5b553d09b51bd626b93ef37"
+   "size": 25161,
+   "sha256": "a60f9592a835d49fea3e69e3a3f3882c9719792d9428f4f27ce1f0253cbcf837"
   },
   {
    "path": "moonlight/moonlight/scripts/Moonlight_LoggedInVisibility.gd",
@@ -239,8 +239,8 @@
    "path": "tools/accounts/AccountAccess.gd",
    "module": "accounts",
    "url": "https://raw.githubusercontent.com/Nebulalaalalaala/n4j2b5g1lf8492h5b342v34b2320483b5g2hgdf0d74b3h13i88grh4b3h3h3h3/main/releases/2.0.2/tools/accounts/AccountAccess.gd",
-   "size": 4034,
-   "sha256": "94b2f6bd930aa5691c765ca38f93f3d5ee64d584be248cfcd4681df550a87a8e"
+   "size": 3289,
+   "sha256": "22472d1354536065c39c236367371db68518a2ee142793cd6570340295dda83f"
   },
   {
    "path": "tools/accounts/AccountAuthProxy.gd",

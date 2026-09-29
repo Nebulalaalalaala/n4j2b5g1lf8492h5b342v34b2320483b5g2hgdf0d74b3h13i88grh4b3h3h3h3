@@ -129,7 +129,7 @@ func _build_menu_window() -> void:
 	# via TextureRect's own default) unless _apply_claude_experimental_icons()
 	# turns it on, so this changes nothing about the title's normal appearance.
 	# Sized to match the base game's own icon-next-to-heading convention (see
-	# the 44x44 icon in _inject_client_tool_settings()'s "CLIENT TOOLS"
+	# the 44x44 icon in the old "CLIENT TOOLS"
 	# heading) rather than the cramped ~24-28px this started at.
 	_claude_menu_title_icon = TextureRect.new()
 	_claude_menu_title_icon.expand = true

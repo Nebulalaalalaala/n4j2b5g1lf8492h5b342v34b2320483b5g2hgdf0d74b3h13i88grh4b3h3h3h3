@@ -300,7 +300,7 @@ func _build_settings() -> void:
 		categories[title] = card(settings, title)
 	categories["Experimental"].add_child(label("Features still being tested.", 14, MUTED))
 	categories["Experimental"].add_child(button("Autoplay", "tab:2", 4))
-	for entry in [["Avatar Studio", "_sandbox_gui_enabled", "_on_settings_sandbox_gui_toggled"], ["Replay library", "_replay_hub_gui_enabled", "_on_settings_replay_hub_gui_toggled"], ["Game tools", "_game_tools_gui_enabled", "_on_settings_game_tools_gui_toggled"], ["Friends & party", "_social_hub_gui_enabled", "_on_settings_social_hub_gui_toggled"], ["Looks", "_cosmetic_loadouts_gui_enabled", "_on_settings_cosmetic_loadouts_toggled"], ["Editor themes", "_editor_theme_pack_enabled", "_on_settings_editor_theme_pack_toggled"], ["Match maps", "_match_map_preview_enabled", "_on_settings_match_map_preview_toggled"], ["Wins leaderboard", "_wins_leaderboard_enabled", "_on_settings_wins_leaderboard_toggled"], ["Leaderboard search", "_leaderboard_search_enabled", "_on_settings_leaderboard_search_toggled"], ["Custom lobby code", "_custom_lobby_code_enabled", "_on_settings_custom_lobby_code_toggled"], ["Debug tools", "_debug_mode_enabled", "_on_settings_debug_mode_toggled"], ["Update checks", "_update_checks_enabled", "_on_settings_update_checks_toggled"]]:
+	for entry in [["Avatar Studio", "_sandbox_gui_enabled", "_on_settings_sandbox_gui_toggled"], ["Replay library", "_replay_hub_gui_enabled", "_on_settings_replay_hub_gui_toggled"], ["Game tools", "_game_tools_gui_enabled", "_on_settings_game_tools_gui_toggled"], ["Friends & party", "_social_hub_gui_enabled", "_on_settings_social_hub_gui_toggled"], ["Looks", "_cosmetic_loadouts_gui_enabled", "_on_settings_cosmetic_loadouts_toggled"], ["Editor themes", "_editor_theme_pack_enabled", "_on_settings_editor_theme_pack_toggled"], ["Match maps", "_match_map_preview_enabled", "_on_settings_match_map_preview_toggled"], ["Wins leaderboard", "_wins_leaderboard_enabled", "_on_settings_wins_leaderboard_toggled"], ["Leaderboard search", "_leaderboard_search_enabled", "_on_settings_leaderboard_search_toggled"], ["Custom lobby code", "_custom_lobby_code_enabled", "_on_settings_custom_lobby_code_toggled"], ["Debug tools", "_debug_mode_enabled", "_on_settings_debug_mode_toggled"], ["Update checks", "_update_checks_enabled", "_on_settings_update_checks_toggled"], ["Legacy title art", "_claude_experimental_icons_enabled", "_on_settings_claude_experimental_icons_toggled"]]:
 		if not main_handler.setting_available(entry[1]):
 			continue
 		var check = CheckButton.new()
@@ -319,16 +319,21 @@ func _build_settings() -> void:
 			category = "Developer"
 		elif entry[1] == "_social_hub_gui_enabled":
 			category = "Experimental"
-		elif entry[1] in ["_update_checks_enabled", "_sandbox_gui_enabled", "_cosmetic_loadouts_gui_enabled"]:
+		elif entry[1] in ["_update_checks_enabled", "_sandbox_gui_enabled", "_cosmetic_loadouts_gui_enabled", "_claude_experimental_icons_enabled"]:
 			category = "General"
 		categories[category].add_child(check)
 	categories["Developer"].add_child(button("Action log", "logs", 12))
 	var system = card(settings, "Interface & updates")
 	system.add_child(button("Reset window layout", "reset-layout", 0))
 	system.add_child(button("Check for updates", "updates", 11))
+	system.add_child(button("Install update", "install-update", 11))
 	system.add_child(button("Roll back last update", "rollback", 12))
 	system.add_child(button("Replay introduction", "intro", 0))
 	system.add_child(label("Version " + str(tas_tool.call("_get_goobplayability_version")), 14, MUTED))
+	var status = label("", 14, MUTED)
+	status.autowrap = true
+	system.add_child(status)
+	tas_tool.set("_updater_status_label", status)
 
 func _toggle_icon(on: bool) -> Texture:
 	var pixels = Image.new()
