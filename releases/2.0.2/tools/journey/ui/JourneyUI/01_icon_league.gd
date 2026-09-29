@@ -194,13 +194,19 @@ func clickable(panel, target, method, arg = null, hover_color = NAVY_3):
 	panel.mouse_default_cursor_shape = Control.CURSOR_POINTING_HAND
 	var normal = panel.get_stylebox("panel")
 	var lit = normal.duplicate()
-	lit.bg_color = hover_color
-	var ring = lit.duplicate()
-	ring.border_width_left = 5
-	ring.border_width_right = 5
-	ring.border_width_top = 5
-	ring.border_width_bottom = max(5, ring.border_width_bottom)
-	ring.border_color = PINK_LIGHT
+	var ring = null
+	if lit is StyleBoxFlat:
+		lit.bg_color = hover_color
+		ring = lit.duplicate()
+		ring.border_width_left = 5
+		ring.border_width_right = 5
+		ring.border_width_top = 5
+		ring.border_width_bottom = max(5, ring.border_width_bottom)
+		ring.border_color = PINK_LIGHT
+	else:
+		# Textured panels (e.g. themed cards) brighten instead of recolouring.
+		lit.set("modulate_color", Color(1.15, 1.15, 1.2))
+		ring = lit
 	panel.set_meta("journey_styles", [normal, lit, ring])
 	panel.connect("mouse_entered", self, "_hover", [panel, 1])
 	panel.connect("mouse_exited", self, "_hover", [panel, 0])

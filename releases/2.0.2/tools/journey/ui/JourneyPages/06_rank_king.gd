@@ -96,8 +96,22 @@ func leaderboard(parent):
 	if not found and int(screen.ledger.total_xp) > 0:
 		ui.label(col, "You'll appear here once your XP is sent (every couple of minutes).", "small", ui.FAINT)
 
+# The game's own profile dialog, as the native leaderboards open it.
+func _open_profile(user_id):
+	var scene = screen.get_tree().current_scene
+	var dialog = load("res://project_specific/ui/UIPlayerProfileDialog.tscn")
+	if scene == null or not dialog is PackedScene:
+		return
+	screen.play("click")
+	var profile = dialog.instance()
+	scene.add_child(profile)
+	profile.call("show_player_profile_dialog", str(user_id))
+
 func _leader_row(parent, place, row, own):
 	var p = ui.well(parent, ui.YELLOW.darkened(0.55) if own else ui.NAVY_2, 16, 24)
+	if not str(row.get("user_id", "")).empty():
+		ui.clickable(p, self, "_open_profile", str(row.user_id))
+		p.hint_tooltip = "Open GooberDash profile"
 	var line = ui.box(p, false, 18)
 	var pos = ui.label(line, str(place), "num_m", [ui.YELLOW, Color("d6e2f0"), Color("e0a36b")][place - 1] if place <= 3 else ui.MUTED, Label.ALIGN_CENTER)
 	pos.rect_min_size.x = 70

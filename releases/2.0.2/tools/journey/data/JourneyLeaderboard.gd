@@ -25,6 +25,8 @@ var _get = null
 var _post = null
 var _url = ""
 var _key = ""
+var _legacy = false   # the database only has the 4-argument submit (no user_id column yet)
+var _last_body = null
 
 func _ready():
 	pause_mode = Node.PAUSE_MODE_PROCESS
@@ -59,7 +61,8 @@ func fetch(force = false) -> void:
 			call_deferred("emit_signal", "updated")
 		return
 	status = "loading"
-	var url = "%s/rest/v1/%s?select=player,display_name,xp,rank_name&order=xp.desc&limit=100" % [_url, TABLE]
+	# select=* so user_id is read when the table has it and nothing breaks when it doesn't.
+	var url = "%s/rest/v1/%s?select=*&order=xp.desc&limit=100" % [_url, TABLE]
 	if _get.request(url, _headers(), true, HTTPClient.METHOD_GET) != OK:
 		status = "error"
 		fetched_at = OS.get_unix_time()
@@ -81,7 +84,8 @@ func _on_fetched(result, code, _headers_in, body) -> void:
 			for row in parsed.result:
 				if row is Dictionary:
 					rows.append({"player": str(row.get("player", "")), "name": str(row.get("display_name", "")).substr(0, 40),
-						"xp": int(row.get("xp", 0)), "rank": str(row.get("rank_name", "")).substr(0, 40)})
+						"xp": int(row.get("xp", 0)), "rank": str(row.get("rank_name", "")).substr(0, 40),
+						"user_id": str(row.get("user_id", "")) if row.get("user_id") != null else ""})
 		status = "ready"
 	emit_signal("updated")
 
@@ -90,7 +94,7 @@ func submit(account_id, display_name, xp, rank_name) -> void:
 	if _post == null or _key.empty() or str(account_id).empty() or int(xp) <= 0 or int(xp) == int(_submitted.xp):
 		return
 	_pending = {"player": player_key(account_id), "display_name": str(display_name).strip_edges().substr(0, 40),
-		"xp": int(xp), "rank_name": str(rank_name).substr(0, 40)}
+		"xp": int(xp), "rank_name": str(rank_name).substr(0, 40), "user_id": str(account_id)}
 	if OS.get_unix_time() - int(_submitted.at) < SUBMIT_EVERY or _post.get_http_client_status() != HTTPClient.STATUS_DISCONNECTED:
 		set_process(true)
 		return
@@ -109,9 +113,18 @@ func _send() -> void:
 	_submitted = {"xp": int(row.xp), "at": OS.get_unix_time()}
 	var url = "%s/rest/v1/rpc/%s" % [_url, SUBMIT_FN]
 	var body = {"p_player": row.player, "p_name": row.display_name, "p_xp": row.xp, "p_rank": row.rank_name}
+	if not _legacy:
+		body["p_user_id"] = row.user_id
+	_last_body = body
 	_post.request(url, _headers(), true, HTTPClient.METHOD_POST, JSON.print(body))
 
 func _on_submitted(result, code, _headers_in, _body) -> void:
+	if result == HTTPRequest.RESULT_SUCCESS and code == 404 and not _legacy and _last_body != null and _last_body.has("p_user_id"):
+		# Older database without the user_id version of the function: send the 4-argument call.
+		_legacy = true
+		_last_body.erase("p_user_id")
+		_post.request("%s/rest/v1/rpc/%s" % [_url, SUBMIT_FN], _headers(), true, HTTPClient.METHOD_POST, JSON.print(_last_body))
+		return
 	if result != HTTPRequest.RESULT_SUCCESS or code >= 300:
 		_submitted.xp = -1
 		if code == 404:

@@ -35,8 +35,12 @@ func _consider_profile(node: Node) -> void:
 func _physics_process(delta: float) -> void:
 	if tool == null or not is_instance_valid(tool):
 		return
+	# The session is replaced when switching accounts in-game (Accounts tool);
+	# local_account is not, so the session decides who is signed in.
 	var owner_id := ""
-	if Moonlight.local_account != null and Moonlight.local_account.user != null:
+	if Moonlight.session != null and not str(Moonlight.session.user_id).empty():
+		owner_id = str(Moonlight.session.user_id)
+	elif Moonlight.local_account != null and Moonlight.local_account.user != null:
 		owner_id = str(Moonlight.local_account.user.id)
 	if owner_id != store.account_id:
 		_flush()

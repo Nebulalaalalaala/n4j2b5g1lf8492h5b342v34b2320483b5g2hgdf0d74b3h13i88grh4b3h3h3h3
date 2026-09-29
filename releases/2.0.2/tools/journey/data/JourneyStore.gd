@@ -153,14 +153,12 @@ func toggle_featured(key) -> String:
 	return "added"
 
 # ---------------------------------------------------------------- claims
-# Rewards come from progress shared by every account on this PC, so each one is
-# claimable once per PC: claims are also kept in journey/pc-claims.json (seeded
-# from every account's .ui.json the first time). Daily playtime ("play:") and
-# notices stay per account.
+# Claims are per account (each account has its own progress). The older shared
+# journey/pc-claims.json is left on disk but no longer consulted.
 var _pc = null
 
-func _pc_wide(key) -> bool:
-	return not (str(key).begins_with("play:") or str(key).begins_with("notice:"))
+func _pc_wide(_key) -> bool:
+	return false
 
 func _pc_claims() -> Dictionary:
 	if _pc != null:
@@ -216,7 +214,7 @@ func set_flag(key) -> void:
 	save()
 
 func claimed_tier(key) -> int:
-	return int(max(int(claimed.get(str(key),0)),int(_pc_claims().get(str(key),0))))
+	return int(claimed.get(str(key),0))
 
 # Called by the XP owner after the ledger accepted the tier award.
 func mark_claimed(key,tier:int) -> void:

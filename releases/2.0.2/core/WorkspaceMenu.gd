@@ -93,6 +93,16 @@ func icon(index: int) -> Texture:
 	icons[index] = texture
 	return texture
 
+# Goobplayability's mark (the pink bean tile).
+func _bean() -> Texture:
+	var image = Image.new()
+	if image.load(ModPaths.ICONS_DIR + "goob_bean.png") != OK:
+		return icon(15)
+	image.resize(72, 72, Image.INTERPOLATE_LANCZOS)
+	var texture = ImageTexture.new()
+	texture.create_from_image(image, Texture.FLAG_FILTER)
+	return texture
+
 func button(text: String, key: String, glyph: int = -1) -> Button:
 	var result = Button.new()
 	result.text = text
@@ -153,7 +163,7 @@ func build(owner_tool, root: VBoxContainer, section_tabs: TabContainer, resize_r
 	header.add_constant_override("separation", 12)
 	var mark = TextureRect.new()
 	mark.mouse_filter = Control.MOUSE_FILTER_IGNORE
-	mark.texture = icon(15)
+	mark.texture = _bean()
 	mark.expand = true
 	mark.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
 	mark.rect_min_size = Vector2(36, 36)

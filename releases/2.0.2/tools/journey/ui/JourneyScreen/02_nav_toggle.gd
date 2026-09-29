@@ -137,14 +137,15 @@ func _merge_accounts(m):
 func _connect_local(m):
 	journey_store.configure(str(ledger.account_id))
 	if m.stats != null and m.stats.get("store") != null:
-		if m.preview:
-			m.stats.records = m.stats.store.records
-		else:
-			_merge_accounts(m)
+		# Achievements, quests and maps count this account's own rounds only.
+		m.stats.records = m.stats.store.records
 	if not m.preview and journey_store.writable and leaderboard != null:
 		var moonlight = get_node_or_null("/root/Moonlight") if is_inside_tree() else null
-		var display = moonlight.storage.storage_get("account.user.display_name", "") if moonlight != null and moonlight.get("storage") != null else ""
-		leaderboard.submit(str(ledger.account_id), display, int(ledger.total_xp), str(definitions.rank_at(int(ledger.total_xp)).name))
+		var storage = moonlight.storage if moonlight != null and moonlight.get("storage") != null else null
+		# Only send when the game's account data belongs to this ledger: right after an
+		# account switch the two can briefly disagree and pair one account's XP with the other's name.
+		if storage != null and str(storage.storage_get("account.user.id", "")) == str(ledger.account_id):
+			leaderboard.submit(str(ledger.account_id), storage.storage_get("account.user.display_name", ""), int(ledger.total_xp), str(definitions.rank_at(int(ledger.total_xp)).name))
 	if not m.preview and m.get("roadmap") != null:
 		m.cosmetics = {"themes": theme_rules.build(m.roadmap, int(ledger.total_xp), theme_rules.equipped(get_tree() if is_inside_tree() else null)), "finishes": _finishes()}
 	if m.stats != null and m.stats.get("store") != null:
