@@ -148,26 +148,38 @@ func _on_friend_request_complete(friend_code: String, _user_id: String, response
 			if _friend_code_input != null:
 				_friend_code_input.text = ""
 		1:
-			_set_status("That friend code was not found.", true)
+			_set_status("The game could not resolve that code. Try the player's GP- code instead.", true)
 		_:
 			_set_status("The friend request failed.", true)
 	_refresh_all()
 
 
 func _repair_local_friend_code() -> String:
-	var code: = ""
 	var moonlight = _moonlight()
-	if moonlight != null and moonlight.get("storage") != null:
-		code = str(moonlight.get("storage").call("storage_get", "friend_code", "")).strip_edges()
-	var friends = _friends_module()
-	if code.empty() and friends != null:
-		var module_code: = str(friends.get("local_friend_code")).strip_edges()
-		if module_code != "TODO":
-			code = module_code
-	if friends != null and not code.empty() and str(friends.get("local_friend_code")) != code:
-		# The dormant implementation assigns the literal string "TODO" here.
-		# Account storage already contains the real server-provided friend code.
-		friends.set("local_friend_code", code)
+	if moonlight == null or not bool(moonlight.call("is_logged_in")):
+		return ""
+	var session = moonlight.get("session")
+	if session == null:
+		return ""
+	# Public identity from the active session; never stale account storage.
+	var user_id: String = _friend_code_user_id(str(session.get("user_id")))
+	return "GP-" + user_id if not user_id.empty() else ""
+
+
+func _friend_code_user_id(value: String) -> String:
+	var code: String = value.strip_edges().to_lower()
+	if code.begins_with("gp-"):
+		code = code.substr(3)
+	if code.length() != 36:
+		return ""
+	for i in range(36):
+		if i in [8, 13, 18, 23]:
+			if code[i] != "-":
+				return ""
+		elif "0123456789abcdef".find(code[i]) == -1:
+			return ""
+	if code == "00000000-0000-0000-0000-000000000000":
+		return ""
 	return code
 
 

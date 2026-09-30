@@ -155,7 +155,26 @@ func _send_friend_request() -> void:
 	if code.empty():
 		_set_status("Enter a friend code first.", true)
 		return
+	var user_id: String = _friend_code_user_id(code)
+	if code.to_lower().begins_with("gp-") and user_id.empty():
+		_set_status("Incomplete friend code. Copy the full GP- code.", true)
+		return
+	if not user_id.empty() and user_id == _friend_code_user_id(_repair_local_friend_code()):
+		_set_status("That is your own friend code.", true)
+		return
 	if not _begin_action("Sending friend request…"):
+		return
+	if not user_id.empty():
+		# Bypass only the unfinished code lookup, keeping native friendships.
+		var direct_result = friends.call("add_friend", user_id)
+		if direct_result is GDScriptFunctionState:
+			direct_result = yield(direct_result, "completed")
+		if direct_result == true:
+			_finish_action("Friend request sent.")
+			if _friend_code_input != null:
+				_friend_code_input.text = ""
+		else:
+			_finish_action("Could not send request. Check the code and your connection.", true)
 		return
 	var result = friends.call("send_friend_request", code)
 	if result is GDScriptFunctionState:
@@ -163,7 +182,7 @@ func _send_friend_request() -> void:
 	# The module normally finishes through send_friend_request_complete. Keep a
 	# fallback for server versions which return without emitting that signal.
 	if _busy:
-		_finish_action("Friend request finished.")
+		_finish_action("The server did not confirm the request. Try the player's GP- code.", true)
 
 
 func _accept_friend_request(user_id: String, display_name: String) -> void:
