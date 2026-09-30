@@ -2,6 +2,7 @@ extends "user://mod/core/TASTool/12_action_log.gd"
 
 # What's new: shown once per version, a short note in the Workspace menu's style.
 const WHATS_NEW := [
+	"Removed the internal thumbnail filter from the Maps tab.",
 	"Map achievement targets follow the catalog; earned badges and XP stay yours.",
 	"Today shows remaining double-XP games, with a cleaner match XP breakdown.",
 	"Click the map detail image to view the full, uncropped thumbnail.",

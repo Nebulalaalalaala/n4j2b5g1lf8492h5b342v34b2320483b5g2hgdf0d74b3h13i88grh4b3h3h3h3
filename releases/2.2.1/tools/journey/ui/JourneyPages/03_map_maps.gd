@@ -51,6 +51,9 @@ func _map_items() -> Array:
 	return out
 
 func maps(parent):
+	# A previously selected internal filter must not leave the visible tab empty.
+	if map_filter == "no_thumb":
+		map_filter = "all"
 	var m = _m()
 	var items = _map_items()
 	var head = screen.section_intro(parent, "Your GooberDash Map Collection")
@@ -106,7 +109,7 @@ func maps(parent):
 	var controls = ui.box(parent, not screen.wide(), 18)
 	var search = ui.search_field(controls, "Search maps", map_query, self, "_map_search")
 	ui.grow(search, true, false, 0.6)
-	_chip_row(controls, [["all", "All"], ["unplayed", "Never played"], ["almost", "Almost complete"], ["no_first", "Missing first place"], ["no_finish", "Not finished"], ["complete", "Complete"], ["no_thumb", "No thumbnail"]], map_filter, "_map_filter")
+	_chip_row(controls, [["all", "All"], ["unplayed", "Never played"], ["almost", "Almost complete"], ["no_first", "Missing first place"], ["no_finish", "Not finished"], ["complete", "Complete"]], map_filter, "_map_filter")
 	var sorts = ui.box(parent, false, 16)
 	ui.label(sorts, "SORT", "caps", ui.WHITE)
 	ui.segmented(sorts, [["name", "Name"], ["completion", "Completion"], ["recent", "Recently played"], ["remaining", "Remaining"]], map_sort, self, "_map_sort")

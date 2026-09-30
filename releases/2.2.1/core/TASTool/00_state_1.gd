@@ -206,7 +206,7 @@ const SETTING_UPDATE_PROMPT_VERSION: = "goobplayability_update_prompt_version"
 const SETTING_UPDATE_PROMPT_COUNT: = "goobplayability_update_prompt_count"
 const SETTING_UPDATE_PROMPT_MUTED: = "goobplayability_update_prompt_muted"
 const UPDATE_PROMPT_LAUNCHES: = 3
-const GOOBPLAYABILITY_VERSION: = "2.2.0"
+const GOOBPLAYABILITY_VERSION: = "2.2.1"
 const SETTING_CHANGELOG_VERSION: = "goobplayability_changelog_version"
 const SETTING_HITBOX_CATEGORY_PREFIX: = "client_tools_hitbox_category_"
 # Claude Experimental Mode -- opt-in, OFF by default. Currently gates a single
