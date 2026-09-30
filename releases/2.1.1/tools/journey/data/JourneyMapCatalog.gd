@@ -7,6 +7,20 @@ var entries = null
 var known = {}
 var certified = false
 var modes = {}   # map id -> catalog mode ("32P", "Elimination", ...)
+var creators = {} # Search metadata only; never rendered on cards/details.
+var cache_stamp = -1
+
+static func search_matches(map, query) -> bool:
+	var needle = _search_key(query)
+	if needle.empty():
+		return true
+	for field in ["name", "mode", "_creator_name", "_creator_id"]:
+		if _search_key(map.get(field, "")).find(needle)>=0:
+			return true
+	return false
+
+static func _search_key(value) -> String:
+	return str(value).to_lower().strip_edges().replace(" ", "").replace("\t", "").replace("\n", "").replace("\r", "")
 
 # Card caption: 32P, 16P, 8P or Knockout. Falls back to the largest recorded lobby.
 static func size_label(mode, players) -> String:
@@ -26,6 +40,14 @@ static func size_label(mode, players) -> String:
 	return ""
 
 func maps(stats):
+	var stamp = File.new().get_modified_time("user://goobplayability/journey/certified-levels.json")
+	if stamp!=cache_stamp:
+		cache_stamp = stamp
+		entries = null
+		known = {}
+		modes = {}
+		creators = {}
+		certified = false
 	if entries == null:
 		entries = []
 		var file = File.new()
@@ -38,6 +60,7 @@ func maps(stats):
 		for entry in entries:
 			known[str(entry.get("id",""))] = true
 			modes[str(entry.get("id",""))] = str(entry.get("mode",""))
+			creators[str(entry.get("id",""))] = {"name":str(entry.get("author",entry.get("author_name",""))),"id":str(entry.get("author_id",""))}
 		for level in load(ModPaths.path("JourneyCertified.gd")).load_cache().get("levels",[]):
 			certified = true
 			if level is Dictionary and not known.has(str(level.get("id",""))):
@@ -45,6 +68,12 @@ func maps(stats):
 				entries.append(level)
 			if level is Dictionary and not str(level.get("mode","")).empty():
 				modes[str(level.get("id",""))] = str(level.mode)
+			if level is Dictionary:
+				var creator = creators.get(str(level.get("id","")), {"name":"", "id":""})
+				for pair in [["name","author"],["id","author_id"]]:
+					if not str(level.get(pair[1],"")).empty():
+						creator[pair[0]] = str(level[pair[1]])
+				creators[str(level.get("id",""))] = creator
 	var result = []
 	var seen = {}
 	for map in stats.maps if stats!=null else []:
@@ -76,4 +105,8 @@ func maps(stats):
 		result.append({"key":"catalog:"+str(entry.id),"name":entry.name,"mode":size_label(entry.mode,0),
 			"plays":0,"completions":0,"dnfs":0,"wins":0,"best":-1.0,"total_time":0.0,
 			"deaths":0,"last_played":0,"best_placement":0,"pb_steps":[]})
+	for map in result:
+		var creator = creators.get(str(map.key).split(":",true,1)[-1], {})
+		map["_creator_name"] = str(creator.get("name",""))
+		map["_creator_id"] = str(creator.get("id",""))
 	return result

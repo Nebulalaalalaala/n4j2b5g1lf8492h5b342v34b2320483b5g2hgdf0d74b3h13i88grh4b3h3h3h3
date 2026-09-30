@@ -2,6 +2,7 @@ extends "user://mod/core/TASTool/12_action_log.gd"
 
 # What's new: shown once per version, a short note in the Workspace menu's style.
 const WHATS_NEW := [
+	"Search your map collection by creator name or player ID.",
 	"Double match XP for your first 10 completed public games each day, win or lose.",
 	"Confirmed race finishes earn XP even when activity samples were missed.",
 	"First-place and clean-sweep bonuses are included in double match XP.",

@@ -123,7 +123,7 @@ func _fill_maps(items = null):
 		child.queue_free()
 	var shown = []
 	for item in items:
-		if map_query != "" and (str(item.name) + " " + str(item.mode)).to_lower().find(map_query.to_lower()) < 0:
+		if not map_catalog.search_matches(item.map, map_query):
 			continue
 		var first_done = false
 		var finish_done = false
