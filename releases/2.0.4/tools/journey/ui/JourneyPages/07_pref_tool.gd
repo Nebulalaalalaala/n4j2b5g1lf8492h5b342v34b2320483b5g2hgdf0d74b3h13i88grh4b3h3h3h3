@@ -190,6 +190,9 @@ func test_tools(body):
 		["Rank-up", "test_preview", "rankup"], ["Quest claim", "test_preview", "claim"],
 		["Session recap", "test_preview", "recap"], ["Match results", "test_preview", "results"]])
 	_tool_group(body, "Journey data", "inbox", "", [["Clear inbox", "test_clear_inbox", null]])
+	var admin = ModPaths.try_load(ModPaths.path("JourneyBadgeAdmin.gd"))
+	if admin != null:
+		admin.add_to(body, screen)
 	var foot = ui.box(body, false, 12)
 	ui.spacer(foot)
 	ui.button(foot, "Reset to normal", "accent", screen, "test_reset", null, "check")

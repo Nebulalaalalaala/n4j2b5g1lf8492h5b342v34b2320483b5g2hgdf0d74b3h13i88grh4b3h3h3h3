@@ -155,3 +155,6 @@ var _scan_timer: = 0.0
 var _was_editor_session: = false
 var _local_theme_choices: = {}
 var menu_theme: String = "follow"
+var _sync = null
+var _rows: = []
+var _row_mark_texture: Texture = null

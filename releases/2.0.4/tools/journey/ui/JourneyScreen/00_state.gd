@@ -27,6 +27,7 @@ var quest_rules = null
 var career_rules = null
 var theme_rules = null
 var leaderboard = null
+var custom_badges = null   # JourneyCustomBadges (set by JourneyHandler / JourneyHud)
 var builder = null
 # Set before build() when Journey is shown over a match (JourneyHud.gd): adds a
 # close button and lets Esc close it.

@@ -53,3 +53,18 @@ func _texture_from_image(image: Image, repeating: bool) -> Texture:
 
 func _log(message: String) -> void:
 	pass
+
+func _setup_sync() -> void:
+	pass
+
+func _remote_theme(level_id) -> String:
+	return ""
+
+func _publish_theme_choice(loaded, key: String) -> void:
+	pass
+
+func _watch_row(row) -> void:
+	pass
+
+func _mark_rows() -> void:
+	pass

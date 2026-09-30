@@ -10,7 +10,7 @@ const SIZE = 134
 const ART = 160
 
 # Your own profile, from the Journey screen's model.
-static func own(medals_section, screen) -> void:
+static func own(medals_section, screen, custom = []) -> void:
 	if not is_instance_valid(screen) or screen.model.empty():
 		return
 	var m = screen.model
@@ -20,14 +20,17 @@ static func own(medals_section, screen) -> void:
 			for c in m.achievements.collections:
 				if c.key == key and int(c.tier) > 0:
 					badges.append({"key": c.key, "tier": int(c.tier)})
-	attach(medals_section, screen.ui, m.get("rank"), badges)
+	attach(medals_section, screen.ui, m.get("rank"), badges, custom)
 
 # Another player's profile, from their looked-up row (JourneyLooks).
-static func other(medals_section, ui, look) -> void:
+# look is null for a player who has only custom badges.
+static func other(medals_section, ui, look, custom = []) -> void:
 	var definitions = load(ModPaths.path("JourneyDefinitions.gd")).new()
-	attach(medals_section, ui, definitions.rank_at(int(look.get("xp", 0))), look.get("badges", []))
+	var rank = definitions.rank_at(int(look.get("xp", 0))) if look != null else null
+	attach(medals_section, ui, rank, look.get("badges", []) if look != null else [], custom)
 
-static func attach(medals_section, ui, rank, badges: Array) -> void:
+# custom: badges from the admin tools (JourneyCustomBadges), shown after the featured ones.
+static func attach(medals_section, ui, rank, badges: Array, custom = []) -> void:
 	if medals_section == null or not is_instance_valid(medals_section) or ui == null:
 		return
 	var list = medals_section.get_parent()
@@ -61,6 +64,9 @@ static func attach(medals_section, ui, rank, badges: Array) -> void:
 				var tier = int(b.tier)
 				var cell = _cell(grid, "%s · %s" % [c[1], achievements.tier_name(tier)])
 				ui.medal(cell, int(clamp(tier - 1, 0, 5)), c[3], ART)
+	for c in custom:
+		var tip = str(c.name) + (" · " + str(c.detail) if not str(c.get("detail", "")).empty() else "")
+		ui.medal(_cell(grid, tip), int(c.frame), str(c.emblem), ART)
 
 static func _cell(grid, tip):
 	var cell = CenterContainer.new()

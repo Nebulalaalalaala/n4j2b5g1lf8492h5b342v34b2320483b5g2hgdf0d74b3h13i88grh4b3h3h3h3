@@ -10,6 +10,7 @@ var activity
 var hud
 var match_xp
 var looks
+var custom_badges
 var elapsed = 0.0
 var look_timer = 0
 
@@ -26,6 +27,8 @@ func _ready():
 	add_child(hud)
 	looks = load(ModPaths.path("JourneyLooks.gd")).new()
 	add_child(looks)
+	custom_badges = load(ModPaths.path("JourneyCustomBadges.gd")).new()
+	add_child(custom_badges)
 	match_xp = load(ModPaths.path("JourneyMatchXP.gd")).new()
 	match_xp.controller = self
 	add_child(match_xp)
@@ -58,6 +61,7 @@ func _attach_home(reference):
 	var candidate = load(ModPaths.path("JourneyScreen.gd")).new()
 	candidate.profile_service = profile_service
 	candidate.activity = activity
+	candidate.custom_badges = custom_badges
 	candidate.build(ledger)
 	# Paginator fills the screen; reserve native identity and navigation bars.
 	candidate.add_constant_override("margin_top",112)

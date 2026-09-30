@@ -5,6 +5,7 @@ func _ready() -> void:
 	var choices = SavedSettings.get_value("client_tools_level_themes", {})
 	if typeof(choices) == TYPE_DICTIONARY:
 		_local_theme_choices = choices.duplicate()
+	_setup_sync()
 	pause_mode = Node.PAUSE_MODE_PROCESS
 	set_process(true)
 	if not get_tree().is_connected("node_added", self, "_on_tree_node_added"):
@@ -24,6 +25,7 @@ func configure(owner_tool) -> void:
 func set_gui_enabled(value: bool) -> void:
 	gui_enabled = value
 	_refresh_main_menu()
+	_mark_rows()
 	for dialog in _theme_dialogs:
 		if is_instance_valid(dialog):
 			_set_dialog_buttons_visible(dialog, value)
@@ -70,6 +72,9 @@ func _process(delta: float) -> void:
 
 func _on_tree_node_added(node: Node) -> void:
 	if node == null or not gui_enabled:
+		return
+	if node is Control and node.has_method("show_level_data"):
+		call_deferred("_watch_row", node)
 		return
 	# This signal fires for every node spawned in a match. Do the two cheap
 	# capability checks first so normal gameplay never performs game/editor
@@ -369,9 +374,13 @@ func _inject_into_level(level) -> void:
 	var loaded_level = level.get("loaded_level")
 	var saved_key: String = str(loaded_level.get("level_theme")) if loaded_level != null and _has_property(loaded_level, "level_theme") else ""
 	if not _is_actual_editor_session() and loaded_level != null:
-		saved_key = str(_local_theme_choices.get(str(loaded_level.get("level_id")), saved_key))
+		var remote = _remote_theme(loaded_level.get("level_id"))
+		saved_key = str(_local_theme_choices.get(str(loaded_level.get("level_id")), remote if not remote.empty() else saved_key))
 	if _is_actual_editor_session():
 		_ensure_themes(base_theme)
+		# A theme picked before the level was first saved (or before sharing existed).
+		if loaded_level != null and _local_theme_choices.has(str(loaded_level.get("level_id"))):
+			_publish_theme_choice(loaded_level, str(_local_theme_choices[str(loaded_level.get("level_id"))]))
 	elif THEME_DEFINITIONS.has(saved_key):
 		_ensure_themes(base_theme, saved_key)
 	else:

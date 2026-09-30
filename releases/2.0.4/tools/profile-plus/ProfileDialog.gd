@@ -27,34 +27,40 @@ func populate_stats(values):
 
 func populate_awards(p):
 	.populate_awards(p)
-	# Journey rank and featured badges: yours from the Journey screen, other
-	# Goobplayability players' from their leaderboard row.
+	# Journey rank, featured badges and custom badges: yours from the Journey
+	# screen, other Goobplayability players' from their leaderboard row.
 	var journey = profile_service.get("journey") if profile_service != null else null
 	if journey == null or not is_instance_valid(journey) or profile_user_id.empty():
 		return
-	var badges = load(ModPaths.JOURNEY_PROFILE_BADGES)
-	if profile_service.store != null and profile_user_id == profile_service.store.account_id:
-		if is_instance_valid(journey.screen):
-			badges.own(award_medal_grid_container.get_parent(), journey.screen)
-		return
-	if journey.get("looks") == null:
-		return
-	if journey.looks.has_fresh(profile_user_id):
-		_show_look(profile_user_id)
-		return
-	if not journey.looks.is_connected("looked_up", self, "_show_look"):
-		journey.looks.connect("looked_up", self, "_show_look", [profile_user_id], CONNECT_ONESHOT)
-	journey.looks.lookup([profile_user_id])
+	_show_journey()
+	for source in [journey.get("looks"), journey.get("custom_badges")]:
+		if source == null:
+			continue
+		var signal_name = "looked_up" if source.has_signal("looked_up") else "changed"
+		if not source.is_connected(signal_name, self, "_show_journey"):
+			source.connect(signal_name, self, "_show_journey")
+		if not source.has_fresh(profile_user_id):
+			source.lookup([profile_user_id])
 
-func _show_look(user_id):
-	var journey = profile_service.get("journey")
-	if user_id != profile_user_id or not is_inside_tree() or not is_instance_valid(journey):
+func _own_profile() -> bool:
+	return profile_service.store != null and profile_user_id == profile_service.store.account_id
+
+func _show_journey():
+	var journey = profile_service.get("journey") if profile_service != null else null
+	if not is_inside_tree() or journey == null or not is_instance_valid(journey) or profile_user_id.empty():
 		return
-	var look = journey.looks.look(user_id)
-	if look == null:
+	var custom = journey.custom_badges.badges_for(profile_user_id) if journey.get("custom_badges") != null else []
+	var section = award_medal_grid_container.get_parent()
+	var badges = load(ModPaths.JOURNEY_PROFILE_BADGES)
+	if _own_profile():
+		if is_instance_valid(journey.screen):
+			badges.own(section, journey.screen, custom)
+		return
+	var look = journey.looks.look(profile_user_id) if journey.get("looks") != null else null
+	if look == null and custom.empty():
 		return
 	var ui = journey.screen.ui if is_instance_valid(journey.screen) else load(ModPaths.path("JourneyUI.gd")).new(load(ModPaths.path("JourneyArt.gd")).new())
-	load(ModPaths.JOURNEY_PROFILE_BADGES).other(award_medal_grid_container.get_parent(), ui, look)
+	badges.other(section, ui, look, custom)
 
 func _apply_studio_look() -> void:
 	if profile_service.tool == null or not is_instance_valid(profile_service.tool):

@@ -87,13 +87,28 @@ func install_available_update() -> void:
 	var tools := _installed_tools()
 	_download_queue = []
 	for entry in available_manifest["files"]:
-		if tools.empty() or str(entry.get("module", "core")) in tools:
+		if (tools.empty() or str(entry.get("module", "core")) in tools) and not _already_installed(entry):
 			_download_queue.append(entry.duplicate(true))
 	_download_index = 0
 	_staging_dir = STAGING_ROOT + "/" + str(available_manifest["version"])
 	_ensure_dir(_staging_dir)
 	_emit_status("DOWNLOADING", "Downloading update files…")
 	_download_next_file()
+
+
+# Images, sounds and fonts that are already exactly this version (same size and
+# SHA-256) are not downloaded again, so unchanged art costs nothing on later
+# updates. Code is always downloaded (small, and TASTool parts get relinked).
+func _already_installed(entry) -> bool:
+	if not str(entry.get("path", "")).get_extension().to_lower() in ["png", "jpg", "wav", "ogg", "ttf", "otf"]:
+		return false
+	var path := ModPaths.ROOT + str(entry.get("path", ""))
+	var file := File.new()
+	if not file.file_exists(path) or file.open(path, File.READ) != OK:
+		return false
+	var size := file.get_len()
+	file.close()
+	return size == int(entry.get("size", -1)) and _sha256_file(path) == str(entry.get("sha256", "")).to_lower()
 
 
 func has_rollback() -> bool:

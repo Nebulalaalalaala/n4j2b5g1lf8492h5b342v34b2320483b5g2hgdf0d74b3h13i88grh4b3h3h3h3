@@ -86,6 +86,7 @@ func _remember_theme_choice(theme) -> void:
 			_local_theme_choices[id] = str(theme.get_meta("goobplayability_theme_key"))
 		else:
 			_local_theme_choices.erase(id)
+		_publish_theme_choice(loaded, str(_local_theme_choices.get(id, "")))
 	SavedSettings.set_value("client_tools_level_themes", _local_theme_choices)
 
 

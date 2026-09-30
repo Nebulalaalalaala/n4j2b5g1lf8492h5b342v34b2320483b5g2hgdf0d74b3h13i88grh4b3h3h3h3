@@ -2,9 +2,9 @@ extends "user://mod/core/TASTool/12_action_log.gd"
 
 # What's new: shown once per version, a short note in the Workspace menu's style.
 const WHATS_NEW := [
-	"Profiles show your Journey rank and featured badges, and other Goobplayability players can see them too.",
-	"Your finish animation now plays for everyone using Goobplayability, and theirs play for you.",
-	"Feature up to three badges from any badge you've earned.",
+	"Level themes from the theme pack now show for everyone using Goobplayability.",
+	"Levels with one get a Goobplayability mark in the level explorer.",
+	"Profiles can show special badges handed out by the Goobplayability team.",
 ]
 
 func _show_changelog_if_needed() -> void:

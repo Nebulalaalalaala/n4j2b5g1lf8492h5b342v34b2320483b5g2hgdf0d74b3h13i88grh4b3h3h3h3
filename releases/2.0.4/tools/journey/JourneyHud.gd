@@ -56,6 +56,7 @@ func open(reference):
 	var screen = load(ModPaths.path("JourneyScreen.gd")).new()
 	screen.profile_service = controller.profile_service
 	screen.activity = controller.activity
+	screen.custom_badges = controller.get("custom_badges")
 	screen.closable = true
 	screen.build(controller.ledger)
 	screen.add_constant_override("margin_top",24)
