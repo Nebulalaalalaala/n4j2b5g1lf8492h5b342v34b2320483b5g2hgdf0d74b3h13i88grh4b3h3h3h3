@@ -199,6 +199,19 @@ func _today(parent):
 	var card = ui.card(parent)
 	var col = ui.box(card, true, 22)
 	ui.heading(col, "Today", "clock", ui.xp_text(model.today_xp) + " today" if model.today_xp > 0 else "No Journey XP yet today", ui.YELLOW if model.today_xp > 0 else ui.MUTED)
+	var now = OS.get_unix_time()
+	var day = str(int(floor(float(now+int(OS.get_time_zone_info().get("bias",0))*60)/86400.0)))
+	var used = {}
+	for entry in ledger.entries:
+		if str(entry.get("daily_match_day",""))==day:
+			used[str(entry.related_id)] = true
+	var remaining = max(0,10-used.size())
+	var boost = ui.well(col, ui.NAVY_2, 16, 22)
+	var boost_row = ui.box(boost, false, 14)
+	ui.icon(boost_row, "xp", 34, ui.YELLOW if remaining>0 else ui.MUTED)
+	ui.grow(ui.label(boost_row, "2× MATCH XP" if remaining>0 else "DAILY BONUS COMPLETE", "caps", ui.YELLOW if remaining>0 else ui.MUTED))
+	ui.label(boost_row, "%d/10 left" % remaining, "button", ui.WHITE)
+	boost.hint_tooltip = "First 10 completed public games each local day, win or lose. Quests and achievements are not doubled."
 	var activity = model.activity
 	var row = ui.box(col, false, 22)
 	ui.label(row, ui.duration(activity.today_seconds) if activity != null else "—", "num_xl")

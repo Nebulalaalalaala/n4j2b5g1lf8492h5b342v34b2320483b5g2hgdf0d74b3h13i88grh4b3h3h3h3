@@ -7,6 +7,13 @@ const ModPaths = preload("user://mod/core/ModPaths.gd")
 # the ledger owner (see JourneyStore.claims_enabled / mark_claimed).
 const TIER_XP = [1000,2500,5000,10000,20000,40000]
 const KINGLY_XP = 40000
+var catalog = null
+
+static func catalog_thresholds(size: int) -> Array:
+	var out = []
+	for fraction in [0.05,0.15,0.30,0.50,0.75,1.0]:
+		out.append(max(1,int(ceil(max(1,size)*fraction))))
+	return out
 const NAMES = ["Silver","Gold","Ruby","Sapphire","Master","Kingly"]
 # key, name, detail, emblem, thresholds for Silver..Master, Kingly 1..Kingly 5.
 # Crown Kingly begins at 1,000 observed wins; later Kingly tiers add 500.
@@ -39,6 +46,9 @@ static func threshold(base:Array,tier:int) -> int:
 
 # builder: JourneyBuilder.summary() (null until the account's levels were checked).
 func build(records:Array,store,builder = null) -> Dictionary:
+	if catalog==null:
+		catalog = load(ModPaths.path("JourneyMapCatalog.gd")).new()
+	var catalog_count = catalog.maps(null).size()
 	var ordered = records.duplicate()
 	ordered.sort_custom(self,"_earlier")
 	var events = {"exploration":[],"crown":[],"podium":[],"clock":[],"conqueror":[],"streak":[]}
@@ -70,7 +80,7 @@ func build(records:Array,store,builder = null) -> Dictionary:
 					milestones.win = date
 			if str(r.result)=="finish" and int(r.placement)>=1 and int(r.placement)<=3:
 				events.podium.append(date)
-			if str(r.result)=="finish" and int(r.placement)==1:
+			if (str(r.result)=="finish" and int(r.placement)==1) or bool(r.win):
 				if milestones.first==0:
 					milestones.first = date
 				if not firsts.has(r.map_id):
@@ -113,6 +123,9 @@ func build(records:Array,store,builder = null) -> Dictionary:
 	for entry in COLLECTIONS:
 		var key = entry[0]
 		var thresholds = entry[4]
+		var finite = key in ["exploration","conqueror"] and catalog_count>0
+		if finite:
+			thresholds = catalog_thresholds(catalog_count)
 		var c = {"key":key,"name":entry[1],"detail":entry[2],"emblem":entry[3],"thresholds":thresholds.slice(0,5),"xp":TIER_XP,
 			"tier":0,"value":0,"dates":[0,0,0,0,0,0],"claimable":false,"claimed":0,"tier_names":NAMES}
 		if not events.has(key):
@@ -121,16 +134,19 @@ func build(records:Array,store,builder = null) -> Dictionary:
 			continue
 		var list = events[key]
 		c.value = list.size()
-		while list.size()>=threshold(thresholds,int(c.tier)+1):
+		while (not finite or c.tier<6) and list.size()>=threshold(thresholds,int(c.tier)+1):
 			c.tier += 1
+		if finite and store!=null:
+			c.tier = max(c.tier,store.claimed_tier(key))
+		c["catalog_complete"] = finite and c.tier>=6
 		# Arrays cover every reached tier plus the next one (at least 6 rows).
-		var count = max(6,int(c.tier)+1)
+		var count = max(6,int(c.tier)) if finite else max(6,int(c.tier)+1)
 		c.thresholds = []
 		c.xp = []
 		c.dates = []
 		c.tier_names = []
 		for i in range(count):
-			var t = threshold(thresholds,i+1)
+			var t = thresholds[min(i,5)] if finite else threshold(thresholds,i+1)
 			c.thresholds.append(t)
 			c.xp.append((TIER_XP[i] if i<TIER_XP.size() else KINGLY_XP)*(int(entry[5]) if entry.size()>5 else 1))
 			c.dates.append(int(list[t-1]) if list.size()>=t else 0)

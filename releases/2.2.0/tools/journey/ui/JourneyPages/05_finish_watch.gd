@@ -398,6 +398,27 @@ func tx_row(parent, entry):
 # Codex) the match results screen. Only categories that awarded XP appear;
 # the headline total is the sum of the listed, deduplicated transactions.
 func xp_breakdown(parent, transactions, key_prefix = "bd"):
+	# Display-only grouping: keep the ledger and original receipt unchanged.
+	var display = []
+	var base_rows = {}
+	for entry in transactions:
+		if not str(entry.id).begins_with("daily-double:") and not base_rows.has(entry.id):
+			var row = entry.duplicate(true)
+			base_rows[entry.id] = row
+			display.append(row)
+	var bonus_seen = {}
+	for entry in transactions:
+		if not str(entry.id).begins_with("daily-double:") or bonus_seen.has(entry.id):
+			continue
+		bonus_seen[entry.id] = true
+		var base_id = str(entry.id).trim_prefix("daily-double:")
+		if base_rows.has(base_id):
+			var row = base_rows[base_id]
+			row.reason = "%s · %s ×2" % [row.reason, ui.thousands(row.amount)]
+			row.amount += int(entry.amount)
+		else:
+			display.append(entry)
+	transactions = display
 	var groups = {}
 	var ids = {}
 	var total = 0

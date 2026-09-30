@@ -73,6 +73,9 @@ func _process(delta):
 			queued = []
 		if _eligible():
 			_sample(step)
+			# Replicated terminal state survives a missed game_over signal.
+			if not saw_over and game.is_game_over():
+				_over(game.wp_game_data.winner_id)
 		elif not poisoned:
 			_world_record()
 		if terminal or not game.is_in_regular_play():

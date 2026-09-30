@@ -2,10 +2,10 @@ extends "user://mod/core/TASTool/12_action_log.gd"
 
 # What's new: shown once per version, a short note in the Workspace menu's style.
 const WHATS_NEW := [
-	"Search your map collection by creator name or player ID.",
-	"Double match XP for your first 10 completed public games each day, win or lose.",
-	"Confirmed race finishes earn XP even when activity samples were missed.",
-	"First-place and clean-sweep bonuses are included in double match XP.",
+	"Map achievement targets follow the catalog; earned badges and XP stay yours.",
+	"Today shows remaining double-XP games, with a cleaner match XP breakdown.",
+	"Click the map detail image to view the full, uncropped thumbnail.",
+	"Match rewards can recover from a missed end-of-match event.",
 ]
 
 func _show_changelog_if_needed() -> void:

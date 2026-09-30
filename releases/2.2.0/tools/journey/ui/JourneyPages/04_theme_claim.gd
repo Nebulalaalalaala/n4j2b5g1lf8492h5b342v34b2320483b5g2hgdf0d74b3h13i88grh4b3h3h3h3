@@ -114,7 +114,7 @@ func _collection_card(parent, c):
 		ui.label(col, "Not tracked yet", "small", ui.FAINT)
 	else:
 		var line = ui.box(col, false, 14)
-		var b = ui.bar(line, float(int(c.value) - previous) / max(1, target - previous), ui.YELLOW, 22)
+		var b = ui.bar(line, 1.0 if c.get("catalog_complete",false) else float(int(c.value) - previous) / max(1, target - previous), ui.YELLOW, 22)
 		b.size_flags_vertical = Control.SIZE_SHRINK_CENTER
 		ui.label(line, "%s / %s" % [ui.thousands(c.value), ui.thousands(target)], "button", ui.WHITE)
 	var foot = ui.box(col, false, 10)
@@ -127,6 +127,8 @@ func _collection_card(parent, c):
 		ui.button(foot, "Claim " + ui.xp_text(c.xp[min(next_claim, c.xp.size() - 1)]), "primary", self, "_claim_tier", c, "check")
 	elif int(c.get("bonus_xp",0))>0:
 		ui.button(foot, "Bonus " + ui.xp_text(c.bonus_xp), "primary", self, "_badge_details", {"key":c.key,"tier":max(0,tier-1)}, "xp")
+	elif c.get("catalog_complete",false):
+		ui.label(foot, "All catalog tiers earned", "small", ui.MUTED)
 	elif not c.get("unsupported", false):
 		# Clipped so this line never sets the grid column width (a width it
 		# drives can make the grid re-sort forever).

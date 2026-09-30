@@ -313,6 +313,20 @@ func _claim_all_maps(_arg = null):
 				objs.append({"key": o.claim_key, "xp": int(o.xp), "label": str(o.label), "map": str(item.name), "obj": o.key})
 	screen.claim_map_rewards(objs, null)
 
+func _full_map_image(map_name):
+	var shot = ui.art.texture(_map_key(map_name))
+	if shot==null:
+		return
+	var body = screen._overlay(str(map_name), "maps")
+	var image = TextureRect.new()
+	image.texture = shot
+	image.expand = true
+	image.stretch_mode = TextureRect.STRETCH_KEEP_ASPECT_CENTERED
+	image.rect_min_size = Vector2(0, min(620, max(200, screen.rect_size.y-280)))
+	image.size_flags_horizontal = Control.SIZE_EXPAND_FILL
+	image.mouse_filter = Control.MOUSE_FILTER_IGNORE
+	body.add_child(image)
+
 func map_detail(parent, arg):
 	var key = str(arg.get("key", "")) if arg is Dictionary else str(arg)
 	var item = null
@@ -329,7 +343,10 @@ func map_detail(parent, arg):
 	ui.grow(left, true, false, 1.2)
 	var hero = ui.card(left, ui.NAVY, 0, 44)
 	var outer = ui.box(hero, true, 0)
-	thumbnail(outer, item.name, 520, 44, _mode_text(item.mode), true, true)
+	var preview = thumbnail(outer, item.name, 520, 44, _mode_text(item.mode), true, true)
+	if ui.art.texture(_map_key(item.name))!=null:
+		ui.clickable(preview, self, "_full_map_image", item.name)
+		preview.hint_tooltip = "View full image"
 	var hpad = MarginContainer.new()
 	hpad.mouse_filter = Control.MOUSE_FILTER_IGNORE
 	for side in ["left", "right", "top", "bottom"]:
