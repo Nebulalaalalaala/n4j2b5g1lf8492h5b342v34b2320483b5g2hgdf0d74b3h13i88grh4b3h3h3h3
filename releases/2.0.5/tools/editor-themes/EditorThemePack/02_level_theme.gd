@@ -378,9 +378,15 @@ func _inject_into_level(level) -> void:
 		saved_key = str(_local_theme_choices.get(str(loaded_level.get("level_id")), remote if not remote.empty() else saved_key))
 	if _is_actual_editor_session():
 		_ensure_themes(base_theme)
-		# A theme picked before the level was first saved (or before sharing existed).
-		if loaded_level != null and _local_theme_choices.has(str(loaded_level.get("level_id"))):
-			_publish_theme_choice(loaded_level, str(_local_theme_choices[str(loaded_level.get("level_id"))]))
+		# Share the theme the editor level has. This also covers a theme picked
+		# before the level's first save (no id yet) and levels themed earlier.
+		var level_id = str(loaded_level.get("level_id")) if loaded_level != null else ""
+		var key = _theme_key_for_level(level)
+		if not level_id.empty() and not key.empty():
+			if str(_local_theme_choices.get(level_id, "")) != key:
+				_local_theme_choices[level_id] = key
+				SavedSettings.set_value("client_tools_level_themes", _local_theme_choices)
+			_publish_theme_choice(loaded_level, key)
 	elif THEME_DEFINITIONS.has(saved_key):
 		_ensure_themes(base_theme, saved_key)
 	else:
