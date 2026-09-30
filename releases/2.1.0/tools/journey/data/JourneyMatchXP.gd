@@ -22,6 +22,7 @@ var trial_baseline = null
 var trial_checked = false
 var retry_after = 0
 var saw_over = false
+var bonus_revision = -1
 
 func _ready():
 	policy = load(ModPaths.path("JourneyMatchRewards.gd")).new()
@@ -40,6 +41,7 @@ func _process(delta):
 	if account!=account_id:
 		_disconnect()
 		account_id = account
+		bonus_revision = -1
 		queued = []
 		receipt = []
 		xp_before = -1
@@ -55,6 +57,7 @@ func _process(delta):
 		rounds = {}
 		current = 0
 		match_id = ""
+		bonus_revision = -1
 		terminal = false
 		winner = false
 		poisoned = false
@@ -110,6 +113,7 @@ func _sample(delta):
 		observed_id = "seed-"+str(seed_id)
 	if observed_id!=match_id:
 		match_id = observed_id
+		bonus_revision = -1
 		rounds = {}
 		current = 0
 		terminal = false
@@ -190,11 +194,20 @@ func _queue_round():
 				queued.append(entry)
 
 func _commit():
-	if queued.empty() or account_id.empty() or OS.get_ticks_msec()<retry_after:
+	if account_id.empty() or OS.get_ticks_msec()<retry_after:
 		return
 	controller._sync_account()
 	var ledger = controller.ledger
 	if ledger.account_id!=account_id:
+		return
+	if queued.empty() and (not terminal or bonus_revision==ledger.revision):
+		return
+	if terminal and not poisoned and not match_id.empty():
+		var now = OS.get_unix_time()
+		var day = str(int(floor(float(now+int(OS.get_time_zone_info().get("bias",0))*60)/86400.0)))
+		queued.append_array(policy.daily_awards(account_id,match_id,ledger.entries,queued,now,day))
+	if queued.empty():
+		bonus_revision = ledger.revision
 		return
 	var fresh = []
 	for entry in queued:
@@ -206,6 +219,7 @@ func _commit():
 		push_warning("Journey match XP not saved yet: "+str(ledger.error))
 		return
 	queued = []
+	bonus_revision = ledger.revision if terminal else -1
 	if not fresh.empty():
 		if xp_before<0:
 			xp_before = before

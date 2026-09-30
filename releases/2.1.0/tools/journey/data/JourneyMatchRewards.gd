@@ -11,7 +11,9 @@ func round_awards(owner, match_id, round_data, now):
 	var out = []
 	if owner.empty() or match_id.empty() or not round_data.get("eligible",false):
 		return out
-	if float(round_data.get("active",0))<1.0 or float(round_data.get("distance",0))<50:
+	var finished_race = round_data.get("race",false) and int(round_data.get("rank",0))>0
+	# A replicated finish is stronger evidence than input samples lost to a stall.
+	if not finished_race and (float(round_data.get("active",0))<1.0 or float(round_data.get("distance",0))<50):
 		return out
 	var root = "match:"+match_id+":"+str(round_data.number)
 	var related = str(round_data.map_id)
@@ -66,10 +68,49 @@ func match_awards(owner, match_id, rounds, winner, now, day):
 	if not meaningful:
 		return out
 	out.append(entry(owner,"match:"+match_id+":win","win","Overall match victory",match_id,rewards.match_win,now))
-	out.append(entry(owner,"daily-win:"+day+":"+owner,"win","First victory of the day",match_id,rewards.first_daily_win,now))
 	# Require the entire observed round sequence, not just a late-joined final.
 	for number in range(1,highest+1):
 		complete = complete and rounds.has(number)
 	if complete and races>0:
 		out.append(entry(owner,"match:"+match_id+":sweep","win","Clean sweep",match_id,rewards.clean_sweep,now))
+	return out
+
+# Called only after the local player is eliminated or the match ends. Bonuses
+# and their slot metadata share the ledger's atomic transaction; no second save
+# can drift out of sync. Only newly observed completions consume daily slots.
+func daily_awards(owner, match_id, saved, pending, now, day):
+	if owner.empty() or match_id.empty():
+		return []
+	var used = {}
+	var slot = 0
+	var assigned_day = day
+	var ids = {}
+	for e in saved:
+		ids[str(e.id)] = true
+		if e.get("player_id","")!=owner or not e.has("daily_match_day"):
+			continue
+		if str(e.daily_match_day)==day:
+			used[str(e.related_id)] = true
+		if str(e.related_id)==match_id:
+			slot = int(e.get("daily_match_slot",0))
+			assigned_day = str(e.daily_match_day)
+	if slot==0:
+		if used.size()>=10:
+			return []
+		slot = used.size()+1
+	var out = []
+	var prefix = "match:"+match_id+":"
+	# Previously committed round XP is included, but never historical matches,
+	# quest claims, achievement tiers, streak rewards or world records.
+	for e in saved+pending:
+		if e.get("player_id","")!=owner or not str(e.id).begins_with(prefix):
+			continue
+		var bonus_id = "daily-double:"+str(e.id)
+		if ids.has(bonus_id):
+			continue
+		ids[bonus_id] = true
+		var bonus = entry(owner,bonus_id,e.category,"Daily 2x (%d/10) · %s" % [slot,e.reason],match_id,e.amount,now)
+		bonus["daily_match_day"] = assigned_day
+		bonus["daily_match_slot"] = slot
+		out.append(bonus)
 	return out

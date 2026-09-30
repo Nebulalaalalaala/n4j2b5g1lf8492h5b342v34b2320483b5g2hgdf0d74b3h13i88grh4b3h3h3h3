@@ -13,7 +13,7 @@ const DEFAULT_COSTS = [6000,7500,9000, 11000,13500,16000, 19500,23500,28000, 340
 const KING_DEFAULT = [150000,25000,2500]
 # Keeps every King threshold below the 64-bit int limit (~6.7e18 XP at the cap).
 const KING_MAX = 200000
-const REWARDS = {"participation":200,"race_finish":500,"podium":400,"match_win":800,"first_daily_win":500,"race_first":100,"clean_sweep":500,"discovery":200,"first_world_record":2500}
+const REWARDS = {"participation":200,"race_finish":500,"podium":400,"match_win":800,"race_first":100,"clean_sweep":500,"discovery":200,"first_world_record":2500}
 const ACTIVITY_SECONDS = [1800,3600,7200,10800,14400]
 const ACTIVITY_XP = [250,750,1500,2500,3500]
 var costs = DEFAULT_COSTS.duplicate()
