@@ -1,0 +1,3 @@
+# Release hashes describe exact bytes, independent of checkout platform.
+/manifest.json -text
+/releases/** -text
