@@ -16,6 +16,10 @@ and the other optional tools.
 4.0.1 opens online Workshop for supported creations and adds opt-in sharing
 of worn custom effects with other updated Goobplayability clients.
 
+4.0.2 improves stop-box editing and recovery, fixes leaving saved Sections runs,
+and starts working runs from the native countdown in linked Time Trials. It also
+restores Editor+ for installed users and fixes the Level themes page.
+
 Clip recording and Windows media sessions use the separate
 [Windows components](components/4.0.0/README.md). MP4 recording and the local
 MP3 decoder also require FFmpeg.
