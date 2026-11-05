@@ -2,6 +2,21 @@
 
 Pinned release source for the Goobplayability client updater.
 
+## Goobplayability 4.0
+
+Open F1 → Settings → General → Interface & updates to check for and install the
+update. Restart Goober Dash after installation. The interactive notes are in
+F1 → News.
+
+4.0 adds the Galaxy workspace, Sections and run recovery, expanded Overlay and
+Effects Studios, Avatar Studio improvements, Zoom, spectator controls and
+Journey progress and rewards. Existing installer tiers determine access to TAS
+and the other optional tools.
+
+Clip recording and Windows media sessions use the separate
+[Windows components](components/4.0.0/README.md). MP4 recording and the local
+MP3 decoder also require FFmpeg.
+
 The updater only reads `manifest.json` from this repository (schema 2). It
 requires the exact supported Goober Dash build, only accepts mod-relative paths
 with allowed file types, never touches Level Council files, restricts every
