@@ -13,6 +13,9 @@ Effects Studios, Avatar Studio improvements, Zoom, spectator controls and
 Journey progress and rewards. Existing installer tiers determine access to TAS
 and the other optional tools.
 
+4.0.1 opens online Workshop for supported creations and adds opt-in sharing
+of worn custom effects with other updated Goobplayability clients.
+
 Clip recording and Windows media sessions use the separate
 [Windows components](components/4.0.0/README.md). MP4 recording and the local
 MP3 decoder also require FFmpeg.
